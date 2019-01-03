@@ -490,7 +490,6 @@ export default class Home extends Vue {
           .split(/\s+/);
       const tmp = [];
       while (paragraph.match(sentencePunctuationRegExp)) {
-        console.log(paragraph);
         const paraRegExpResult = paragraph.match(sentencePunctuationRegExp);
         if (paraRegExpResult) {
           const sentence = paraRegExpResult[0];
