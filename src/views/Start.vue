@@ -579,8 +579,9 @@ export default class Home extends Vue {
         // eslint-disable-next-line
         const reader = new FileReader();
         reader.onload = () => {
-          this.originalText = reader.result;
-          resolve(reader.result);
+          const result = (reader.result as string) || '';
+          this.originalText = result;
+          resolve(result);
         };
         // 以DataURL的形式读取文件:
         reader.readAsText(file);
