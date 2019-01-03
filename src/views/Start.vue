@@ -316,7 +316,7 @@
             <h3>鸣谢</h3>
             <p>谨在此感激遇尔与卢指导在半夜提供的灵感，以及大壮提供的测试与资料。</p>
             <h3>Bug 反馈与功能提交</h3>
-            <p>联系我 QQ 或发邮件都可以，如果关注了 Github 或码云上的 repo，也可以提 issue 或直接发 PR ~</p>
+            <p>联系我 QQ 或发邮件都可以，如果关注了 Github 或码云上的 repository，也可以提 issue 或直接发 PR ~</p>
           </div>
         </el-main>
       </el-container>
