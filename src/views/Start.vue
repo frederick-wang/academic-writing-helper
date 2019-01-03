@@ -406,19 +406,19 @@ export default class Home extends Vue {
   };
 
   get greWords() {
-    Logger.log('greWords');
+    // Logger.log('greWords');
     return this.allWords.filter(v => gre.has(v));
   }
   get toeflWords() {
-    Logger.log('toeflWords');
+    // Logger.log('toeflWords');
     return this.allWords.filter(v => toefl.has(v));
   }
   get cet6Words() {
-    Logger.log('cet6Words');
+    // Logger.log('cet6Words');
     return this.allWords.filter(v => cet6.has(v));
   }
   get cet4Words() {
-    Logger.log('cet4Words');
+    // Logger.log('cet4Words');
     return this.allWords.filter(v => cet4.has(v));
   }
   get allWords() {
@@ -432,7 +432,7 @@ export default class Home extends Vue {
         }
       }
     }
-    Logger.log('allWords');
+    // Logger.log('allWords');
     return result;
   }
   get importantSentences() {
@@ -480,7 +480,7 @@ export default class Home extends Vue {
       .replace(/\n{2,}/g, '\n')
       .replace(/^\n/, '');
     const paragraphs = textFormatted.split('\n').map(v => v.trim());
-    Logger.log(paragraphs);
+    // Logger.log(paragraphs);
     const result = paragraphs.map(paragraph => {
       const splitSentence = (sentence: string) =>
         sentence
@@ -514,7 +514,7 @@ export default class Home extends Vue {
           );
         }
       }
-      Logger.log(tmp);
+      // Logger.log(tmp);
       return tmp;
     });
     allScores.sort((a, b) => b - a);
@@ -607,8 +607,13 @@ export default class Home extends Vue {
         score += 8;
       }
     }
-    score =
-      (score * Math.log(convertedSentence.length)) / convertedSentence.length;
+    const f = (v: number) => Math.log(v) / v;
+    const g = (v: number, mu: number, sigma: number) =>
+      (1 / (sigma * Math.sqrt(2 * Math.PI))) *
+      Math.E ** -((v - mu) ** 2 / (2 * sigma ** 2));
+    const h = (v: number) => (1000 / 13.97) * f(0.15 * v) * g(v, 17.5, 10.5);
+    // console.log(score, h(convertedSentence.length), convertedSentence);
+    score = score * h(convertedSentence.length);
     return score;
   }
   private isPunctuation(word: string) {
