@@ -322,7 +322,7 @@
         </el-main>
       </el-container>
       <el-footer>
-        <p><small>Copyright (C) 2018</small></p>
+        <p><small>Copyright (C) 2018-{{new Date().getFullYear()}}</small></p>
         <p><small>Powered By Frederick Wang</small></p>
       </el-footer>
     </el-container>
