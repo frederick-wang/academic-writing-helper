@@ -599,20 +599,21 @@ export default class Home extends Vue {
       if (cet4.has(word)) {
         score += 1;
       } else if (cet6.has(word)) {
-        score += 2;
-      } else if (toefl.has(word)) {
         score += 4;
+      } else if (toefl.has(word)) {
+        score += 16;
       } else if (gre.has(word)) {
-        score += 8;
+        score += 25;
       }
     }
-    const f = (v: number) => Math.log(v) / v;
-    const g = (v: number, mu: number, sigma: number) =>
+    // const f = (v: number) => Math.log(v) / v;
+    const normalDistributionPDF = (v: number, mu: number, sigma: number) =>
       (1 / (sigma * Math.sqrt(2 * Math.PI))) *
       Math.E ** -((v - mu) ** 2 / (2 * sigma ** 2));
-    const h = (v: number) => (1000 / 13.97) * f(0.15 * v) * g(v, 17.5, 10.5);
+    const getSentenceLengthScore = (v: number) =>
+      normalDistributionPDF(v, 17.5, (17.5 - 7) / 2);
     // console.log(score, h(convertedSentence.length), convertedSentence);
-    score = score * h(convertedSentence.length);
+    score = score * getSentenceLengthScore(convertedSentence.length);
     return score;
   }
   private isPunctuation(word: string) {
