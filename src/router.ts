@@ -1,23 +1,60 @@
 import Vue from 'vue';
-import Router from 'vue-router';
+import VueRouter from 'vue-router';
 import Start from './views/Start.vue';
+import Help from './views/Help.vue';
+import About from './views/About.vue';
+import AnalyzedResult from './views/start/AnalyzedResult.vue';
+import OriginalArticle from './views/start/OriginalArticle.vue';
 
-Vue.use(Router);
+Vue.use(VueRouter);
 
-export default new Router({
+export const StartRouter = {
+  ORIGINAL_ARTICLE: `original_article`,
+  ANALYZED_RESULT: `analyzed_result`
+};
+
+export const Router = {
+  START: 'start',
+  HELP: 'help',
+  ABOUT: 'about',
+  start: StartRouter
+};
+
+export default new VueRouter({
   routes: [
     {
-      path: '/',
-      name: 'start',
-      component: Start,
+      path: `/`,
+      redirect: `/${Router.START}`
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
+      path: `/${Router.START}`,
+      component: Start,
+      children: [
+        {
+          path: '',
+          redirect: StartRouter.ORIGINAL_ARTICLE
+        },
+        {
+          path: StartRouter.ORIGINAL_ARTICLE,
+          name: StartRouter.ORIGINAL_ARTICLE,
+          component: OriginalArticle
+        },
+        {
+          path: StartRouter.ANALYZED_RESULT,
+          name: StartRouter.ANALYZED_RESULT,
+          component: AnalyzedResult
+        }
+      ]
     },
+    {
+      path: `/${Router.HELP}`,
+      name: Router.HELP,
+      component: Help
+    },
+    {
+      path: `/${Router.ABOUT}`,
+      name: Router.ABOUT,
+      component: About
+    }
   ],
 });

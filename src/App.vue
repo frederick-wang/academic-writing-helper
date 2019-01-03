@@ -1,43 +1,188 @@
 <template>
   <div id="app">
-    <router-view />
+    <div id="spinner">
+      <div class="sk-circle">
+        <div class="sk-circle1 sk-child"></div>
+        <div class="sk-circle2 sk-child"></div>
+        <div class="sk-circle3 sk-child"></div>
+        <div class="sk-circle4 sk-child"></div>
+        <div class="sk-circle5 sk-child"></div>
+        <div class="sk-circle6 sk-child"></div>
+        <div class="sk-circle7 sk-child"></div>
+        <div class="sk-circle8 sk-child"></div>
+        <div class="sk-circle9 sk-child"></div>
+        <div class="sk-circle10 sk-child"></div>
+        <div class="sk-circle11 sk-child"></div>
+        <div class="sk-circle12 sk-child"></div>
+      </div>
+    </div>
+    <el-container
+      id="main"
+      direction="vertical"
+    >
+      <Nav />
+      <router-view />
+      <Footer />
+    </el-container>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-@Component
-export default class App extends Vue {}
+import Nav from '@/components/Nav.vue';
+import Footer from '@/components/Footer.vue';
+
+@Component({
+  components: {
+    Nav,
+    Footer
+  }
+})
+export default class App extends Vue {
+  private mounted() {
+    const $main = document.getElementById('main');
+    const $spinner = document.getElementById('spinner');
+    if ($main && $spinner) {
+      $main.style.display = 'flex';
+      $spinner.style.display = 'none';
+    }
+  }
+}
 </script>
 
 <style lang="scss">
 #app {
-  .el-container {
+  position: relative;
+  min-height: 100vh;
+
+  #main {
+    display: none;
+    min-height: 100vh;
+    padding-top: 60px;
+
+    .typo {
+      h3:first-child {
+        margin-top: 0;
+      }
+      p {
+        text-indent: 2em;
+      }
+    }
+  }
+
+  #spinner {
+    z-index: 1000;
+    position: absolute;
+    top: 0;
+    left: 0;
     height: 100vh;
-  }
-
-  .nav-menu {
-    z-index: 999;
-  }
-
-  .el-aside {
-    height: 100%;
-
-    > .aside-menu {
-      height: 100%;
+    width: 100%;
+    background: #2ea9df;
+    background-color: #2ea9df;
+    overflow: hidden;
+    .sk-circle {
+      width: 120px;
+      height: 120px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      .sk-child {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        &:before {
+          content: '';
+          display: block;
+          margin: 0 auto;
+          width: 15%;
+          height: 15%;
+          background-color: #fff;
+          border-radius: 100%;
+          animation: sk-circleBounceDelay 1.2s infinite ease-in-out both;
+        }
+      }
+      .sk-circle2 {
+        transform: rotate(30deg);
+        &:before {
+          animation-delay: -1.1s;
+        }
+      }
+      .sk-circle3 {
+        transform: rotate(60deg);
+        &:before {
+          animation-delay: -1s;
+        }
+      }
+      .sk-circle4 {
+        transform: rotate(90deg);
+        &:before {
+          animation-delay: -0.9s;
+        }
+      }
+      .sk-circle5 {
+        transform: rotate(120deg);
+        &:before {
+          animation-delay: -0.8s;
+        }
+      }
+      .sk-circle6 {
+        transform: rotate(150deg);
+        &:before {
+          animation-delay: -0.7s;
+        }
+      }
+      .sk-circle7 {
+        transform: rotate(180deg);
+        &:before {
+          animation-delay: -0.6s;
+        }
+      }
+      .sk-circle8 {
+        transform: rotate(210deg);
+        &:before {
+          animation-delay: -0.5s;
+        }
+      }
+      .sk-circle9 {
+        transform: rotate(240deg);
+        &:before {
+          animation-delay: -0.4s;
+        }
+      }
+      .sk-circle10 {
+        transform: rotate(270deg);
+        &:before {
+          animation-delay: -0.3s;
+        }
+      }
+      .sk-circle11 {
+        transform: rotate(300deg);
+        &:before {
+          animation-delay: -0.2s;
+        }
+      }
+      .sk-circle12 {
+        transform: rotate(330deg);
+        &:before {
+          animation-delay: -0.1s;
+        }
+      }
     }
-  }
-
-  .el-menu {
-    a {
-      text-decoration: none;
-    }
-  }
-
-  .typo {
-    p {
-      text-indent: 2em;
+    @keyframes sk-circleBounceDelay {
+      0%,
+      80%,
+      100% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+      }
+      40% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+      }
     }
   }
 }
