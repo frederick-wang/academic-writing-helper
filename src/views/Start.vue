@@ -309,9 +309,10 @@
           >
             <h3>关于我</h3>
             <p>王兆基，男，九十年代生人，可能是一个程序员。</p>
+            <p>个人博客：https://zhaoji.wang</p>
             <p>Github：https://github.com/frederick-wang</p>
             <p>码云：https://gitee.com/zhaoji</p>
-            <p>电子邮箱：hwoam@outlook.com</p>
+            <p>电子邮箱：zhaoji.wang@scujs.net</p>
             <p>腾讯 QQ：1095875055</p>
             <h3>鸣谢</h3>
             <p>谨在此感激遇尔与卢指导在半夜提供的灵感，以及大壮提供的测试与资料。</p>
