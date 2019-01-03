@@ -340,7 +340,7 @@ const cet6 = importWordsData(require('@/assets/dict/cet6.json'));
 const toefl = importWordsData(require('@/assets/dict/toefl.json'));
 const gre = importWordsData(require('@/assets/dict/gre.json'));
 
-const sentencePunctuationRegExp = /.+?(;|\.|\?|!|…|\.{3})/;
+const sentencePunctuationRegExp = /.+?(;|\.|\?|!|…|\.{3}|$)/;
 const wordPunctuationRegExp = /(:|,|"|'|~|`|-|\\|\/|<|>|\{|\}|\[|\]|\+|-|\*|_|\(|\)|&|\^|%|\$|#|@|\||’|…)/g;
 const punctuations = new Map([
   [':', true],
@@ -376,7 +376,7 @@ const punctuations = new Map([
   ['?', true],
   ['!', true],
   ['|', true],
-  ['.{3}', true],
+  ['...', true],
   ['…', true]
 ]);
 
@@ -409,6 +409,7 @@ export default class Home extends Vue {
     toefl: '#67C23A80',
     gre: '#409EFF80'
   };
+
   get greWords() {
     Logger.log('greWords');
     return this.allWords.filter(v => gre.has(v));
@@ -483,21 +484,28 @@ export default class Home extends Vue {
       .replace(/\n\s+\n/g, '\n\n')
       .replace(/\n{2,}/g, '\n')
       .replace(/^\n/, '');
-    // .replace(/\n\s+/g, '\n')
     const paragraphs = textFormatted.split('\n').map(v => v.trim());
+    Logger.log(paragraphs);
     const result = paragraphs.map(paragraph => {
+      const splitSentence = (sentence: string) =>
+        sentence
+          .trim()
+          .replace(wordPunctuationRegExp, ' $1 ')
+          .replace(/ {2}/, ' ')
+          .split(/\s+/);
       const tmp = [];
       while (paragraph.match(sentencePunctuationRegExp)) {
+        console.log(paragraph);
         const paraRegExpResult = paragraph.match(sentencePunctuationRegExp);
         if (paraRegExpResult) {
           const sentence = paraRegExpResult[0];
           const punctuation = paraRegExpResult[1];
-          const convertedSentence = sentence
-            .slice(0, sentence.length - 1)
-            .trim()
-            .replace(wordPunctuationRegExp, ' $1 ')
-            .replace(/ {2}/, ' ')
-            .split(/\s+/);
+          const convertedSentence = splitSentence(
+            sentence.slice(
+              0,
+              punctuation !== '' ? sentence.length - 1 : sentence.length
+            )
+          );
           const score = this.getSentenceScore(convertedSentence);
           allScores.push(score);
           tmp.push({
@@ -511,20 +519,7 @@ export default class Home extends Vue {
           );
         }
       }
-      if (paragraph) {
-        const convertedSentence = paragraph
-          .slice(0, paragraph.length - 1)
-          .trim()
-          .replace(wordPunctuationRegExp, ' $1')
-          .split(/\s+/);
-        const score = this.getSentenceScore(convertedSentence);
-        allScores.push(score);
-        tmp.push({
-          score,
-          sentence: convertedSentence,
-          punctuation: null
-        });
-      }
+      Logger.log(tmp);
       return tmp;
     });
     allScores.sort((a, b) => b - a);
@@ -638,7 +633,7 @@ export default class Home extends Vue {
     }
     result += word;
     if (wordIndex === sentence.length - 1) {
-      result += punctuation || '';
+      result += punctuation;
     }
     return result;
   }
