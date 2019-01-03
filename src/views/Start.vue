@@ -391,7 +391,7 @@ function importWordsData(data: string[]) {
 })
 export default class Home extends Vue {
   public name = 'start';
-  private version = '0.3.0';
+  private version = '0.3.1';
   private page = '1';
   private subPage = '1';
   private tabName = 'article';
