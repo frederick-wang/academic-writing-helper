@@ -330,9 +330,9 @@
 
 <script lang="ts">
 import { ipcRenderer as ipc } from 'electron';
+import { Logger } from '@/Tools';
 import { Component, Vue } from 'vue-property-decorator';
 import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
-import { Logger } from '@/Tools';
 
 const cet4 = importWordsData(require('@/assets/dict/cet4.json'));
 const cet6 = importWordsData(require('@/assets/dict/cet6.json'));
