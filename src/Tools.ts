@@ -58,7 +58,7 @@ const punctuations = new Map([
   ['!', true],
   ['|', true],
   ['...', true],
-  ['…', true]
+  ['â€¦', true]
 ]);
 
 export const Logger = {
@@ -87,7 +87,26 @@ export const Dict = {
 
 export const Punctuation = {
   sentencePunctuationRegExp, wordPunctuationRegExp,
-  isPunctuation: (v: string) => punctuations.has(v)
+  /**
+   * 判断是否为标点
+   */
+  is: (v: string) => punctuations.has(v),
+  /**
+   * 将文本中的中文标点转化为英文标点
+   */
+  normalizeText: (text: string) =>
+    text.replace(/“|”/g, '"')
+      .replace(/‘|’/g, `'`)
+      .replace(/，/g, ',')
+      .replace(/。/g, '.')
+      .replace(/！/g, '!')
+      .replace(/？/g, '?')
+      .replace(/；/g, ';')
+      .replace(/：/g, ':')
+      .replace(/【/g, '[')
+      .replace(/】/g, ']')
+      .replace(/（/g, '(')
+      .replace(/）/g, ')')
 };
 
 export default { Logger, Dict, Punctuation };

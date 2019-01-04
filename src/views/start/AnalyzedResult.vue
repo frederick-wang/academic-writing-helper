@@ -235,23 +235,10 @@ export default class AnalyzedResult extends Vue {
       return [];
     }
     const allScores: number[] = [];
-    const textFormatted = this.originalText
-      // 中文标点转英文标点
-      .replace(/“|”/g, '"')
-      .replace(/‘|’/g, `'`)
-      .replace(/，/g, ',')
-      .replace(/。/g, '.')
-      .replace(/！/g, '!')
-      .replace(/？/g, '?')
-      .replace(/；/g, ';')
-      .replace(/：/g, ':')
-      .replace(/【/g, '[')
-      .replace(/】/g, ']')
-      .replace(/（/g, '(')
-      .replace(/）/g, ')')
+    const textFormatted = Punctuation.normalizeText(this.originalText)
       // 看起来好看点，虽然这两个实际上不是一个符号
       // .replace(/’/g, '\'')
-      // 文本处理
+      // 换行处理
       .replace(/\r/g, '\n')
       .replace(/\n\s+\n/g, '\n\n')
       .replace(/\n{2,}/g, '\n')
@@ -323,7 +310,7 @@ export default class AnalyzedResult extends Vue {
     for (const para of this.analyzedResult) {
       for (const s of para) {
         for (const w of s.sentence) {
-          if (!Punctuation.isPunctuation(w) && !result.includes(w)) {
+          if (!Punctuation.is(w) && !result.includes(w)) {
             result.push(w);
           }
         }
@@ -379,7 +366,7 @@ export default class AnalyzedResult extends Vue {
   ) {
     let result = '';
     if (wordIndex !== 0) {
-      if (!Punctuation.isPunctuation(word)) {
+      if (!Punctuation.is(word)) {
         // 因为换成了inline-block，这里添加的空格已经失效了。
         result += ' ';
       }
@@ -393,7 +380,7 @@ export default class AnalyzedResult extends Vue {
   private getWordStyle(word: string) {
     word = word.toLowerCase();
     const result: any = {};
-    if (!Punctuation.isPunctuation(word)) {
+    if (!Punctuation.is(word)) {
       if (Dict.isCET4(word)) {
         result.backgroundColor = this.backgroundColor.cet4;
       } else if (Dict.isCET6(word)) {
