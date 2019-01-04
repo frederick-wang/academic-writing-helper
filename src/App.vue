@@ -53,8 +53,6 @@ export default class App extends Vue {
 
 <style lang="scss">
 #app {
-  @import '_spinner.scss';
-
   position: relative;
   min-height: 100vh;
 
