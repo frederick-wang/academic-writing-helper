@@ -3,6 +3,7 @@
   "version": "0.3.1",
   "description": "The helper of academic writing courses.",
   "author": "Frederick Wang",
+  "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

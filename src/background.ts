@@ -27,7 +27,7 @@ function createWindow() {
     createProtocol('app');
     // Load the index.html when not in development
     mainWindow.loadURL('app://./index.html');
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
   }
 
   mainWindow.on('closed', () => {

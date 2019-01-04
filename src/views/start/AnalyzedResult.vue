@@ -413,7 +413,7 @@ export default class AnalyzedResult extends Vue {
       `本文件由【Academic Writing Helper ${
         this.version
       }】于 ${new Date().toLocaleString()} 导出\r\n` +
-      'Copyright (C) 2018 | Powered By Frederick Wang\r\n' +
+      `Copyright (C) ${new Date().getFullYear()} | Powered By Frederick Wang\r\n` +
       '----------------------------------------\r\n\r\n';
     for (let i = 0; i < this.importantSentences.length; i++) {
       const s = this.importantSentences[i];
