@@ -2,7 +2,8 @@
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 // Dict
-const junior = importWordsData(require('@/assets/dict/junior.json'));
+let junior: any;
+junior = importWordsData(require('@/assets/dict/junior.json'));
 const cet4 = importWordsData(require('@/assets/dict/cet4.json'));
 const cet6 = importWordsData(require('@/assets/dict/cet6.json'));
 const toefl = importWordsData(require('@/assets/dict/toefl.json'));
