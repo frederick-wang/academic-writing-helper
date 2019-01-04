@@ -1,7 +1,7 @@
 <template>
   <el-footer class="footer">
     <p>Academic Writing Helper {{version}}</p>
-    <p>Copyright &copy; 2018-{{year}} Frederick Wang</p>
+    <p>Copyright &copy; {{year}} Frederick Wang</p>
   </el-footer>
 </template>
 
