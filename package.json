@@ -2,8 +2,16 @@
   "name": "academic-writing-helper",
   "version": "0.3.1",
   "description": "The helper of academic writing courses.",
-  "author": "Frederick Wang",
+  "author": {
+    "name": "Frederick Wang",
+    "email": "zhaoji.wang@scujs.net",
+    "url": "https://zhaoji.wang"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frederick-wang/academic-writing-helper.git"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
