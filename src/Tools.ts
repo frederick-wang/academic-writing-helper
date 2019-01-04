@@ -107,6 +107,8 @@ export const Punctuation = {
       .replace(/】/g, ']')
       .replace(/（/g, '(')
       .replace(/）/g, ')')
+  // 看起来好看点，虽然这两个实际上不是一个符号
+  // .replace(/’/g, '\'')
 };
 
 export default { Logger, Dict, Punctuation };

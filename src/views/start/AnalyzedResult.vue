@@ -234,17 +234,26 @@ export default class AnalyzedResult extends Vue {
       Logger.timeEnd('analyzedResult');
       return [];
     }
+    /**
+     * 临时存放所有句子的得分，用于之后找出前20%的重点句子
+     */
     const allScores: number[] = [];
-    const textFormatted = Punctuation.normalizeText(this.originalText)
-      // 看起来好看点，虽然这两个实际上不是一个符号
-      // .replace(/’/g, '\'')
-      // 换行处理
-      .replace(/\r/g, '\n')
-      .replace(/\n\s+\n/g, '\n\n')
-      .replace(/\n{2,}/g, '\n')
-      .replace(/^\n/, '');
-    const paragraphs = textFormatted.split('\n').map(v => v.trim());
-    // Logger.log(paragraphs);
+    /**
+     * 文本预处理函数
+     * @param text 需要预处理的文本
+     * @returns 处理好的文本，为一个按照段落分开的 string[]
+     */
+    const preProcessText = (text: string) => {
+      const tidyCRLF = (str: string) =>
+        str
+          .replace(/\r/g, '\n')
+          .replace(/\n\s+\n/g, '\n\n')
+          .replace(/\n{2,}/g, '\n')
+          .replace(/^\n/, '');
+      const split = (str: string) => str.split('\n').map(v => v.trim());
+      return split(tidyCRLF(Punctuation.normalizeText(text)));
+    };
+    const paragraphs = preProcessText(this.originalText);
     const result = paragraphs.map(paragraph => {
       const splitSentence = (sentence: string) =>
         sentence
