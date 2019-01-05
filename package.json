@@ -7,7 +7,7 @@
     "email": "zhaoji.wang@scujs.net",
     "url": "https://zhaoji.wang"
   },
-  "license": "MIT",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/frederick-wang/academic-writing-helper.git"
