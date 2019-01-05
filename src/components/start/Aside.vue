@@ -46,8 +46,13 @@ export default class Aside extends Vue {
 
 <style lang="scss" scoped>
 .aside {
+  position: relative;
+  border-right: solid 1px #e6e6e6;
+
   > .aside-menu {
-    height: 100%;
+    position: fixed;
+    width: inherit;
+    height: inherit;
 
     a {
       text-decoration: none;
