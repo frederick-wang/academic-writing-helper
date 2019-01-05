@@ -206,7 +206,6 @@ interface SentenceItem {
 @Component
 export default class AnalyzedResult extends Vue {
   private tabName = 'article';
-  private importanceStandard = 0;
 
   get version() {
     return process.env.VUE_APP_VERSION;
@@ -224,16 +223,29 @@ export default class AnalyzedResult extends Vue {
     return Dict.wordBackgroundColor;
   }
 
+  get importanceStandard() {
+    /**
+     * 临时存放所有句子的得分，按从大到小排列
+     */
+    const allScores = this.analyzedResult
+      .reduce(
+        (accPara, curPara) => [
+          ...accPara,
+          ...curPara.reduce((acc, cur) => [...acc, cur.score], [] as number[])
+        ],
+        [] as number[]
+      )
+      .sort((a, b) => b - a);
+    // 取 20% 处的得分为重点句的标准，如果当前没有句子的话，就返回 0
+    return allScores[Math.floor(allScores.length * 0.2)] || 0;
+  }
+
   get analyzedResult() {
     Logger.time('analyzedResult');
     if (!this.originalText) {
       Logger.timeEnd('analyzedResult');
       return [];
     }
-    /**
-     * 临时存放所有句子的得分，用于之后找出前20%的重点句子
-     */
-    const allScores: number[] = [];
 
     const tidyCRLF = (str: string) =>
       str
@@ -270,17 +282,12 @@ export default class AnalyzedResult extends Vue {
         .map(sentence => {
           const convertedSentence = splitSentence(sentence);
           const score = this.getSentenceScore(convertedSentence);
-          allScores.push(score);
           return {
             score,
             sentence: convertedSentence
           };
         });
     const result = paragraphs.map(splitParagraphToSentences);
-    // 将所有句子的得分按照从大到小排序，取 20% 处的得分为重点句的标准
-    this.importanceStandard = allScores.sort((a, b) => b - a)[
-      Math.floor(allScores.length * 0.2)
-    ];
     Logger.timeEnd('analyzedResult');
     return result;
   }
@@ -376,6 +383,10 @@ export default class AnalyzedResult extends Vue {
       }】于 ${new Date().toLocaleString()} 导出\r\n` +
       `Copyright (C) ${new Date().getFullYear()} | Powered By Frederick Wang\r\n` +
       '----------------------------------------\r\n\r\n';
+    /**
+     * Time: 2019-1-6 06:07:40
+     * TODO: Need to replace the for-loop here with reduce() methods.
+     */
     for (let i = 0; i < this.importantSentences.length; i++) {
       const s = this.importantSentences[i];
       const sentence = `${i + 1}. ${s.sentence.join('')}`;
@@ -407,6 +418,10 @@ export default class AnalyzedResult extends Vue {
 </script>
 
 <style lang="scss" scoped>
+/**
+ * Time: 2019-1-6 06:24:33
+ * TODO: Need to add "user-select: none;" to functional components, to make them more reasonable.
+ */
 .subpage-analyzed-result {
   .sentence {
     text-indent: 0;
