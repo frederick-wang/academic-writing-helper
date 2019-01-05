@@ -9,7 +9,7 @@
         <p>王兆基，男，九十年代生人，可能是一个程序员。</p>
         <p>个人博客：<a href="https://zhaoji.wang">https://zhaoji.wang</a></p>
         <p>Github：<a href="https://github.com/frederick-wang">https://github.com/frederick-wang</a></p>
-        <p>码云：<a href="https://gitee.com/zhaoji">https://gitee.com/zhaoji</a></p>
+        <p>码云：<a href="https://gitee.com/frederick-wang">https://gitee.com/frederick-wang</a></p>
         <p>电子邮箱：<a href="mailto:zhaoji.wang@scujs.net">zhaoji.wang@scujs.net</a></p>
         <p>腾讯 QQ：<a href="https://wpa.qq.com/msgrd?v=3&uin=1095875055&site=qq&menu=yes">1095875055</a></p>
         <h3>鸣谢</h3>
