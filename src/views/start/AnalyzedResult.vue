@@ -12,22 +12,22 @@
         <div class="word-class-indicators">
           <el-tag
             class="word-class-tag"
-            :color="backgroundColor.cet4"
+            :color="wordBackgroundColor.cet4"
             :disable-transitions="true"
           >四级词汇</el-tag>
           <el-tag
             class="word-class-tag"
-            :color="backgroundColor.cet6"
+            :color="wordBackgroundColor.cet6"
             :disable-transitions="true"
           >六级词汇</el-tag>
           <el-tag
             class="word-class-tag"
-            :color="backgroundColor.toefl"
+            :color="wordBackgroundColor.toefl"
             :disable-transitions="true"
           >托福词汇</el-tag>
           <el-tag
             class="word-class-tag"
-            :color="backgroundColor.gre"
+            :color="wordBackgroundColor.gre"
             :disable-transitions="true"
           >GRE词汇</el-tag>
         </div>
@@ -50,9 +50,7 @@
                 v-for="(word, wordIndex) in sentenceItem.sentence"
                 :key="wordIndex"
                 :style="getWordStyle(word)"
-              >
-                {{getWordText(word, wordIndex, sentenceItem)}}
-              </span>
+              >{{word}}</span>
             </div>
           </div>
         </div>
@@ -65,22 +63,22 @@
         <div class="word-class-indicators">
           <el-tag
             class="word-class-tag"
-            :color="backgroundColor.cet4"
+            :color="wordBackgroundColor.cet4"
             :disable-transitions="true"
           >四级词汇</el-tag>
           <el-tag
             class="word-class-tag"
-            :color="backgroundColor.cet6"
+            :color="wordBackgroundColor.cet6"
             :disable-transitions="true"
           >六级词汇</el-tag>
           <el-tag
             class="word-class-tag"
-            :color="backgroundColor.toefl"
+            :color="wordBackgroundColor.toefl"
             :disable-transitions="true"
           >托福词汇</el-tag>
           <el-tag
             class="word-class-tag"
-            :color="backgroundColor.gre"
+            :color="wordBackgroundColor.gre"
             :disable-transitions="true"
           >GRE词汇</el-tag>
           <el-button
@@ -105,9 +103,7 @@
                 v-for="(word, wordIndex) in sentenceItem.sentence"
                 :key="wordIndex"
                 :style="getWordStyle(word)"
-              >
-                {{getWordText(word, wordIndex, sentenceItem)}}
-              </span>
+              >{{word}}</span>
             </div>
           </div>
         </div>
@@ -122,11 +118,11 @@
             class="word"
             v-for="(item, index) in cet4Words"
             :key="index"
-            :style="{ 'border-color': borderColor.cet4 }"
+            :style="{ 'border-color': wordBorderColor.cet4 }"
           >
             <span
               class="word-number"
-              :style="{ 'border-right-color': borderColor.cet4 }"
+              :style="{ 'border-right-color': wordBorderColor.cet4 }"
             >{{index + 1}}</span>
             <span class="word-title">{{item}}</span>
           </div>
@@ -142,11 +138,11 @@
             class="word"
             v-for="(item, index) in cet6Words"
             :key="index"
-            :style="{ 'border-color': borderColor.cet6 }"
+            :style="{ 'border-color': wordBorderColor.cet6 }"
           >
             <span
               class="word-number"
-              :style="{ 'border-right-color': borderColor.cet6 }"
+              :style="{ 'border-right-color': wordBorderColor.cet6 }"
             >{{index + 1}}</span>
             <span class="word-title">{{item}}</span>
           </div>
@@ -162,11 +158,11 @@
             class="word"
             v-for="(item, index) in toeflWords"
             :key="index"
-            :style="{ 'border-color': borderColor.toefl }"
+            :style="{ 'border-color': wordBorderColor.toefl }"
           >
             <span
               class="word-number"
-              :style="{ 'border-right-color': borderColor.toefl }"
+              :style="{ 'border-right-color': wordBorderColor.toefl }"
             >{{index + 1}}</span>
             <span class="word-title">{{item}}</span>
           </div>
@@ -182,11 +178,11 @@
             class="word"
             v-for="(item, index) in greWords"
             :key="index"
-            :style="{ 'border-color': borderColor.gre }"
+            :style="{ 'border-color': wordBorderColor.gre }"
           >
             <span
               class="word-number"
-              :style="{ 'border-right-color': borderColor.gre }"
+              :style="{ 'border-right-color': wordBorderColor.gre }"
             >{{index + 1}}</span>
             <span class="word-title">{{item}}</span>
           </div>
@@ -202,22 +198,15 @@ import { Component, Vue } from 'vue-property-decorator';
 import { StartRouter } from '@/router';
 import { Logger, Dict, Punctuation } from '@/Tools';
 
+interface SentenceItem {
+  score: number;
+  sentence: string[];
+}
+
 @Component
 export default class AnalyzedResult extends Vue {
   private tabName = 'article';
   private importanceStandard = 0;
-  private borderColor = {
-    cet4: '#DCDFE6',
-    cet6: '#E6A23C',
-    toefl: '#67C23A',
-    gre: '#409EFF'
-  };
-  private backgroundColor = {
-    cet4: '#DCDFE680',
-    cet6: '#E6A23C80',
-    toefl: '#67C23A80',
-    gre: '#409EFF80'
-  };
 
   get version() {
     return process.env.VUE_APP_VERSION;
@@ -227,8 +216,15 @@ export default class AnalyzedResult extends Vue {
     return this.$store.state.originalText;
   }
 
+  get wordBorderColor() {
+    return Dict.wordBorderColor;
+  }
+
+  get wordBackgroundColor() {
+    return Dict.wordBackgroundColor;
+  }
+
   get analyzedResult() {
-    Logger.log('analyzedResult: Begin');
     Logger.time('analyzedResult');
     if (!this.originalText) {
       Logger.timeEnd('analyzedResult');
@@ -238,63 +234,54 @@ export default class AnalyzedResult extends Vue {
      * 临时存放所有句子的得分，用于之后找出前20%的重点句子
      */
     const allScores: number[] = [];
+
+    const tidyCRLF = (str: string) =>
+      str
+        .replace(/\r/g, '\n')
+        .replace(/\n\s+\n/g, '\n\n')
+        .replace(/\n{2,}/g, '\n')
+        .replace(/^\n/, '');
+
+    const splitParagraph = (str: string) =>
+      str
+        .split('\n')
+        .map(v => v.trim())
+        .filter(v => v);
+
+    const splitSentence = (str: string) =>
+      str
+        .trim()
+        .split(Punctuation.wordPunctuationRegExp)
+        .filter(v => v);
+
     /**
      * 文本预处理函数
      * @param text 需要预处理的文本
      * @returns 处理好的文本，为一个按照段落分开的 string[]
      */
-    const preProcessText = (text: string) => {
-      const tidyCRLF = (str: string) =>
-        str
-          .replace(/\r/g, '\n')
-          .replace(/\n\s+\n/g, '\n\n')
-          .replace(/\n{2,}/g, '\n')
-          .replace(/^\n/, '');
-      const split = (str: string) => str.split('\n').map(v => v.trim());
-      return split(tidyCRLF(Punctuation.normalizeText(text)));
-    };
+    const preProcessText = (text: string) =>
+      splitParagraph(tidyCRLF(Punctuation.normalizeText(text)));
+
     const paragraphs = preProcessText(this.originalText);
-    const result = paragraphs.map(paragraph => {
-      const splitSentence = (sentence: string) =>
-        sentence
-          .trim()
-          .replace(Punctuation.wordPunctuationRegExp, ' $1 ')
-          .replace(/ {2}/, ' ')
-          .split(/\s+/);
-      const tmp = [];
-      while (paragraph.match(Punctuation.sentencePunctuationRegExp)) {
-        const paraRegExpResult = paragraph.match(
-          Punctuation.sentencePunctuationRegExp
-        );
-        if (paraRegExpResult) {
-          const sentence = paraRegExpResult[0];
-          const punctuation = paraRegExpResult[1];
-          const convertedSentence = splitSentence(
-            sentence.slice(
-              0,
-              punctuation !== '' ? sentence.length - 1 : sentence.length
-            )
-          );
+
+    const splitParagraphToSentences = (text: string) =>
+      (text.match(Punctuation.sentencePunctuationRegExpG) || [])
+        .map(v => v.trim())
+        .map(sentence => {
+          const convertedSentence = splitSentence(sentence);
           const score = this.getSentenceScore(convertedSentence);
           allScores.push(score);
-          tmp.push({
+          return {
             score,
-            sentence: convertedSentence,
-            punctuation
-          });
-          paragraph = paragraph.slice(
-            paraRegExpResult.index || 0 + sentence.length,
-            paragraph.length
-          );
-        }
-      }
-      // Logger.log(tmp);
-      return tmp;
-    });
-    allScores.sort((a, b) => b - a);
-    this.importanceStandard = allScores[Math.floor(allScores.length * 0.2)];
+            sentence: convertedSentence
+          };
+        });
+    const result = paragraphs.map(splitParagraphToSentences);
+    // 将所有句子的得分按照从大到小排序，取 20% 处的得分为重点句的标准
+    this.importanceStandard = allScores.sort((a, b) => b - a)[
+      Math.floor(allScores.length * 0.2)
+    ];
     Logger.timeEnd('analyzedResult');
-    Logger.log('analyzedResult: End');
     return result;
   }
 
@@ -315,94 +302,72 @@ export default class AnalyzedResult extends Vue {
     return this.allWords.filter(v => Dict.isCET4(v));
   }
   get allWords() {
-    const result: string[] = [];
-    for (const para of this.analyzedResult) {
-      for (const s of para) {
-        for (const w of s.sentence) {
-          if (!Punctuation.is(w) && !result.includes(w)) {
-            result.push(w);
-          }
-        }
-      }
-    }
-    // Logger.log('allWords');
-    return result;
+    return this.analyzedResult.reduce(
+      (accPara, curPara) => [
+        ...accPara,
+        ...curPara.reduce(
+          (accS, curS) => [
+            ...accS,
+            ...curS.sentence.reduce(
+              (acc, cur) =>
+                Punctuation.is(cur) || accPara.includes(cur)
+                  ? acc
+                  : [...acc, cur],
+              [] as string[]
+            )
+          ],
+          [] as string[]
+        )
+      ],
+      [] as string[]
+    );
   }
-  get importantSentences() {
-    Logger.log('importantSentences: Begin');
-    Logger.time('importantSentences');
-    const result = [];
-    for (const para of this.analyzedResult) {
-      for (const s of para) {
-        if (s.score >= this.importanceStandard) {
-          result.push(s);
-        }
-      }
-    }
-    Logger.timeEnd('importantSentences');
-    Logger.log('importantSentences: End');
-    return result;
+  get importantSentences(): SentenceItem[] {
+    return this.analyzedResult.reduce(
+      (accPara, curPara) => [
+        ...accPara,
+        ...curPara.reduce(
+          (acc, cur) =>
+            cur.score >= this.importanceStandard ? [...acc, cur] : acc,
+          [] as SentenceItem[]
+        )
+      ],
+      [] as SentenceItem[]
+    );
   }
 
-  private getSentenceScore(convertedSentence: any) {
-    let score = 0;
-    for (let word of convertedSentence) {
-      word = word.toLowerCase();
-      if (Dict.isCET4(word)) {
-        score += 1;
-      } else if (Dict.isCET6(word)) {
-        score += 4;
-      } else if (Dict.isToefl(word)) {
-        score += 16;
-      } else if (Dict.isCET4(word)) {
-        score += 25;
-      }
-    }
+  private getSentenceScore(convertedSentence: string[]) {
+    const sentenceWords = convertedSentence.filter(
+      v => !v.match(Punctuation.wordPunctuationRegExp)
+    );
+
     // const f = (v: number) => Math.log(v) / v;
-    const normalDistributionPDF = (v: number, mu: number, sigma: number) =>
+    const normpdf = (v: number, mu: number, sigma: number) =>
       (1 / (sigma * Math.sqrt(2 * Math.PI))) *
       Math.E ** -((v - mu) ** 2 / (2 * sigma ** 2));
-    const getSentenceLengthScore = (v: number) =>
-      normalDistributionPDF(v, 17.5, (17.5 - 7) / 2);
-    // console.log(score, h(convertedSentence.length), convertedSentence);
-    score = score * getSentenceLengthScore(convertedSentence.length);
-    return score;
-  }
-  private getWordText(
-    word: string,
-    wordIndex: number,
-    { sentence, punctuation }: any
-  ) {
-    let result = '';
-    if (wordIndex !== 0) {
-      if (!Punctuation.is(word)) {
-        // 因为换成了inline-block，这里添加的空格已经失效了。
-        result += ' ';
-      }
-    }
-    result += word;
-    if (wordIndex === sentence.length - 1) {
-      result += punctuation;
-    }
-    return result;
+
+    const getLengthScore = (v: number) => normpdf(v, 17.5, (17.5 - 7) / 2);
+
+    const getWordsScore = (words: string[]) =>
+      words
+        .map(word => word.toLowerCase())
+        .reduce((acc, cur) => acc + Dict.getWordScore(cur), 0);
+
+    const getTotalScore = (words: string[]) => (length: number) =>
+      getWordsScore(words) * getLengthScore(length);
+
+    return getTotalScore(sentenceWords)(sentenceWords.length);
   }
   private getWordStyle(word: string) {
-    word = word.toLowerCase();
-    const result: any = {};
-    if (!Punctuation.is(word)) {
-      if (Dict.isCET4(word)) {
-        result.backgroundColor = this.backgroundColor.cet4;
-      } else if (Dict.isCET6(word)) {
-        result.backgroundColor = this.backgroundColor.cet6;
-      } else if (Dict.isToefl(word)) {
-        result.backgroundColor = this.backgroundColor.toefl;
-      } else if (Dict.isGRE(word)) {
-        result.backgroundColor = this.backgroundColor.gre;
-      }
-    } else {
-      result.padding = 0;
+    if (word.match(Punctuation.wordPunctuationRegExp)) {
+      return {
+        padding: '0'
+      };
     }
-    return result;
+    const getStyle = (w: string) => ({
+      backgroundColor: Dict.getWordBackgroundColor(w)
+    });
+    return getStyle(word);
   }
   private exportFileTxt() {
     let data =
@@ -413,11 +378,7 @@ export default class AnalyzedResult extends Vue {
       '----------------------------------------\r\n\r\n';
     for (let i = 0; i < this.importantSentences.length; i++) {
       const s = this.importantSentences[i];
-      let sentence = `${i + 1}. `;
-      for (let j = 0; j < s.sentence.length; j++) {
-        const word = s.sentence[j];
-        sentence += this.getWordText(word, j, s);
-      }
+      const sentence = `${i + 1}. ${s.sentence.join('')}`;
       data += `${sentence}\r\n`;
       if (i < this.importantSentences.length - 1) {
         data += '\r\n';
@@ -460,6 +421,7 @@ export default class AnalyzedResult extends Vue {
     > span {
       line-height: 2;
       display: inline-block;
+      white-space: pre;
       text-align: center;
       margin-bottom: 10px;
       padding: 0 5px;
