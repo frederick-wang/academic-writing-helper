@@ -84,7 +84,7 @@
           <el-button
             type="primary"
             size="small"
-            @click="exportFileTxt"
+            @click="exportImportantSentences"
             style="float: right;"
           >导出为 TXT 格式文本文档</el-button>
         </div>
@@ -293,19 +293,15 @@ export default class AnalyzedResult extends Vue {
   }
 
   get greWords() {
-    // Logger.log('greWords');
     return this.allWords.filter(v => Dict.isGRE(v));
   }
   get toeflWords() {
-    // Logger.log('toeflWords');
     return this.allWords.filter(v => Dict.isToefl(v));
   }
   get cet6Words() {
-    // Logger.log('cet6Words');
     return this.allWords.filter(v => Dict.isCET6(v));
   }
   get cet4Words() {
-    // Logger.log('cet4Words');
     return this.allWords.filter(v => Dict.isCET4(v));
   }
   get allWords() {
@@ -348,6 +344,10 @@ export default class AnalyzedResult extends Vue {
       v => !v.match(Punctuation.wordPunctuationRegExp)
     );
 
+    /**
+     * 2019-1-8 04:35:48
+     * TODO: Over a period of time of experiment, it's time to consider to reuse the old algorithm to evaluate scores.
+     */
     // const f = (v: number) => Math.log(v) / v;
     const normpdf = (v: number, mu: number, sigma: number) =>
       (1 / (sigma * Math.sqrt(2 * Math.PI))) *
@@ -376,25 +376,23 @@ export default class AnalyzedResult extends Vue {
     });
     return getStyle(word);
   }
-  private exportFileTxt() {
-    let data =
+  private exportImportantSentences() {
+    const header =
       `本文件由【Academic Writing Helper ${
         this.version
       }】于 ${new Date().toLocaleString()} 导出\r\n` +
       `Copyright (C) ${new Date().getFullYear()} | Powered By Frederick Wang\r\n` +
       '----------------------------------------\r\n\r\n';
-    /**
-     * Time: 2019-1-6 06:07:40
-     * TODO: Need to replace the for-loop here with reduce() methods.
-     */
-    for (let i = 0; i < this.importantSentences.length; i++) {
-      const s = this.importantSentences[i];
-      const sentence = `${i + 1}. ${s.sentence.join('')}`;
-      data += `${sentence}\r\n`;
-      if (i < this.importantSentences.length - 1) {
-        data += '\r\n';
-      }
-    }
+    const content = this.importantSentences.reduce(
+      (acc, cur, i, arr) =>
+        acc +
+        `${i + 1}. ${cur.sentence.join('')}` +
+        (arr.length - i - 1 ? '\r\n\r\n' : '\r\n'),
+      ''
+    );
+    this.exportFileTxt(header + content);
+  }
+  private exportFileTxt(data: string) {
     ipc.once(
       'saved-file-txt',
       (event: any, { error, path }: { error: Error; path: string }) => {
