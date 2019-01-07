@@ -1,6 +1,6 @@
 <template>
-  <div class="subpage subpage-original">
-    <div style="margin-bottom: 15px;">
+  <div class="subpage subpage-original-article">
+    <div class="action-bar">
       <el-button
         type="primary"
         size="small"
@@ -12,8 +12,8 @@
         @click="clearText"
       >清空文本</el-button>
     </div>
-    <div style="margin-bottom: 10px;">
-      <p style="margin-bottom: 10px;">您可以导入一个文本文件，或者直接在下面的文本框中输入需要分析的文章</p>
+    <div class="import-external-file">
+      <p class="tip">您可以导入一个文本文件，或者直接在下面的文本框中输入需要分析的文章</p>
       <el-upload
         ref="uploadDocument"
         class="upload-document"
@@ -89,12 +89,29 @@ export default class OriginalArticle extends Vue {
 </script>
 
 <style lang="scss">
-.upload-document {
-  > .el-upload {
-    width: 100%;
+.subpage-original-article {
+  .action-bar {
+    margin-bottom: 15px;
+    user-select: none;
+  }
 
-    > .el-upload-dragger {
-      width: 100%;
+  .import-external-file {
+    margin-bottom: 10px;
+    user-select: none;
+
+    .tip {
+      margin-bottom: 10px;
+    }
+
+    .upload-document {
+      // 这里的 el-upload 和 el-upload-dragger 都是组件自己渲染的，所以这个页面的样式不能加 scoped.
+      > .el-upload {
+        width: 100%;
+
+        > .el-upload-dragger {
+          width: 100%;
+        }
+      }
     }
   }
 }

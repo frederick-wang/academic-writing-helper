@@ -42,6 +42,7 @@ export default class Nav extends Vue {
   top: 0;
   width: 100%;
   z-index: 999;
+  user-select: none;
 
   .nav-menu {
     a {

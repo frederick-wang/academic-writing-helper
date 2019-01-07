@@ -25,6 +25,7 @@ export default class Footer extends Vue {
   flex-direction: column;
   justify-content: center;
   border-top: solid 1px #e6e6e6;
+  user-select: none;
 
   p {
     font-size: 0.75em;

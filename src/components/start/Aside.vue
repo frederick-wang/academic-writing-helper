@@ -48,6 +48,7 @@ export default class Aside extends Vue {
 .aside {
   position: relative;
   border-right: solid 1px #e6e6e6;
+  user-select: none;
 
   > .aside-menu {
     position: fixed;

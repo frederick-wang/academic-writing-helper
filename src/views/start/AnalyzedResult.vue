@@ -418,10 +418,6 @@ export default class AnalyzedResult extends Vue {
 </script>
 
 <style lang="scss" scoped>
-/**
- * Time: 2019-1-6 06:24:33
- * TODO: Need to add "user-select: none;" to functional components, to make them more reasonable.
- */
 .subpage-analyzed-result {
   .sentence {
     text-indent: 0;
@@ -453,6 +449,7 @@ export default class AnalyzedResult extends Vue {
     padding-bottom: 20px;
     margin-bottom: 20px;
     border-bottom: 1px solid #eee;
+    user-select: none;
 
     > .word-class-tag {
       color: #000000;
