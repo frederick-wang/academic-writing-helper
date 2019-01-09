@@ -21,7 +21,9 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
     "element-ui": "^2.4.5",
+    "got": "^9.5.0",
     "vue": "^2.5.21",
     "vue-class-component": "^6.0.0",
     "vue-property-decorator": "^7.0.0",

@@ -1,10 +1,15 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+// 首页
 import Start from './views/Start.vue';
-import Help from './views/Help.vue';
-import About from './views/About.vue';
 import AnalyzedResult from './views/start/AnalyzedResult.vue';
 import OriginalArticle from './views/start/OriginalArticle.vue';
+// 设置
+import Settings from './views/Settings.vue';
+// 帮助
+import Help from './views/Help.vue';
+// 关于
+import About from './views/About.vue';
 
 Vue.use(VueRouter);
 
@@ -15,6 +20,7 @@ export const StartRouter = {
 
 export const Router = {
   START: 'start',
+  SETTINGS: 'settings',
   HELP: 'help',
   ABOUT: 'about',
   start: StartRouter
@@ -45,6 +51,11 @@ export default new VueRouter({
           component: AnalyzedResult
         }
       ]
+    },
+    {
+      path: `/${Router.SETTINGS}`,
+      name: Router.SETTINGS,
+      component: Settings
     },
     {
       path: `/${Router.HELP}`,

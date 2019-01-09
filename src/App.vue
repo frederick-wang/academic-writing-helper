@@ -51,6 +51,10 @@ export default class App extends Vue {
       }
       p {
         text-indent: 2em;
+
+        &.no-indent {
+          text-indent: 0;
+        }
       }
     }
   }
