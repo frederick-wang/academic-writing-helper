@@ -215,10 +215,16 @@ interface SentenceItem {
   sentence: string[];
 }
 
+interface WordItem {
+  word: string;
+  translation: string[];
+  addition: string;
+}
+
 @Component
 export default class AnalyzedResult extends Vue {
   private tabName = 'article';
-  private importantWordsOfSentences: any = [];
+  private importantWordsOfSentences: WordItem[][] = [];
 
   get settings() {
     return this.$store.state.settings;
@@ -353,7 +359,7 @@ export default class AnalyzedResult extends Vue {
     Logger.time('importantSentencesWatcher');
     this.importantWordsOfSentences = Array.from({
       length: this.importantSentences.length
-    }).map(v => ({}));
+    }).map(v => []);
     const { cet4, cet6, toefl, gre } = this.settings.wordWise;
     Promise.all(
       this.importantSentences.map(({ sentence }, index) =>
@@ -375,7 +381,7 @@ export default class AnalyzedResult extends Vue {
             )
             .map(word =>
               Dict.getWordTranslation(word).then(data => {
-                return Object.assign({ word }, data);
+                return Object.assign({ word }, data) as WordItem;
               })
             )
         ).then(data => {
@@ -457,12 +463,21 @@ export default class AnalyzedResult extends Vue {
       `本文件由【Academic Writing Helper ${
         this.version
       }】于 ${new Date().toLocaleString()} 导出\r\n` +
-      `Copyright (C) ${new Date().getFullYear()} | Powered By Frederick Wang\r\n` +
+      `Copyright (C) ${new Date().getFullYear()} Frederick Wang\r\n` +
       '----------------------------------------\r\n\r\n';
+    const convertSentenceWords = (item: WordItem[]) =>
+      item.reduce(
+        (acc, cur, i, arr) =>
+          acc +
+          `\t${cur.word}: ${cur.translation.join('、')}` +
+          (arr.length - i - 1 ? '\r\n' : ''),
+        item.length ? '\r\n' : ''
+      );
     const content = this.importantSentences.reduce(
       (acc, cur, i, arr) =>
         acc +
         `${i + 1}. ${cur.sentence.join('')}` +
+        convertSentenceWords(this.importantWordsOfSentences[i]) +
         (arr.length - i - 1 ? '\r\n\r\n' : '\r\n'),
       ''
     );
