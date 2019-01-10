@@ -305,25 +305,29 @@ export default class AnalyzedResult extends Vue {
     return this.allWords.filter(v => Dict.isCET4(v));
   }
   get allWords() {
-    return this.analyzedResult.reduce(
-      (accPara, curPara) => [
-        ...accPara,
-        ...curPara.reduce(
-          (accS, curS) => [
-            ...accS,
-            ...curS.sentence.reduce(
-              (acc, cur) =>
-                Punctuation.is(cur) || accPara.includes(cur)
-                  ? acc
-                  : [...acc, cur],
+    return [
+      ...new Set(
+        this.analyzedResult.reduce(
+          (accPara, curPara) => [
+            ...accPara,
+            ...curPara.reduce(
+              (accS, curS) => [
+                ...accS,
+                ...curS.sentence.reduce(
+                  (acc, cur) =>
+                    Punctuation.is(cur) || accPara.includes(cur)
+                      ? acc
+                      : [...acc, cur],
+                  [] as string[]
+                )
+              ],
               [] as string[]
             )
           ],
           [] as string[]
         )
-      ],
-      [] as string[]
-    );
+      )
+    ];
   }
   get importantSentences(): SentenceItem[] {
     return this.analyzedResult.reduce(
