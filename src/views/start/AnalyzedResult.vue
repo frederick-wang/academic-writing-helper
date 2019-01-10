@@ -346,14 +346,17 @@ export default class AnalyzedResult extends Vue {
 
     /**
      * 2019-1-8 04:35:48
-     * TODO: Over a period of time of experiment, it's time to consider to reuse the old algorithm to evaluate scores.
+     * NOTE: Maybe I need to consider to reuse the old algorithm to evaluate scores, but it's unnecessary.
      */
-    const f = (v: number) => Math.log(v) ** 2 / v;
+
+    // The old algorithm: f(x) = ln(x)^2 / x.
+    // const f = (v: number) => Math.log(v) ** 2 / v;
+    // const getLengthScore = f;
+
+    // The current algorithm: normal distribution, which μ equals 17.5 and 2 * σ equals (17.5 - 7).
     const normpdf = (v: number, mu: number, sigma: number) =>
       (1 / (sigma * Math.sqrt(2 * Math.PI))) *
       Math.E ** -((v - mu) ** 2 / (2 * sigma ** 2));
-
-    // const getLengthScore = f;
     const getLengthScore = (v: number) => normpdf(v, 17.5, (17.5 - 7) / 2);
 
     const getWordsScore = (words: string[]) =>
