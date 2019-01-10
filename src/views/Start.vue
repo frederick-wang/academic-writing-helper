@@ -9,7 +9,6 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { Logger } from '@/Tools';
 import Aside from '@/components/start/Aside.vue';
 
 @Component({
@@ -17,11 +16,7 @@ import Aside from '@/components/start/Aside.vue';
     Aside
   }
 })
-export default class Start extends Vue {
-  get version() {
-    return this.$store.state.basic.version;
-  }
-}
+export default class Start extends Vue {}
 </script>
 
 <style lang="scss">

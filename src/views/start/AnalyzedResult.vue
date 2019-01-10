@@ -348,11 +348,12 @@ export default class AnalyzedResult extends Vue {
      * 2019-1-8 04:35:48
      * TODO: Over a period of time of experiment, it's time to consider to reuse the old algorithm to evaluate scores.
      */
-    // const f = (v: number) => Math.log(v) / v;
+    const f = (v: number) => Math.log(v) ** 2 / v;
     const normpdf = (v: number, mu: number, sigma: number) =>
       (1 / (sigma * Math.sqrt(2 * Math.PI))) *
       Math.E ** -((v - mu) ** 2 / (2 * sigma ** 2));
 
+    // const getLengthScore = f;
     const getLengthScore = (v: number) => normpdf(v, 17.5, (17.5 - 7) / 2);
 
     const getWordsScore = (words: string[]) =>
