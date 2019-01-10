@@ -39,18 +39,19 @@ const gre = importWordsData(require('@/assets/dict/gre.json'));
 // const DATA_PATH = path.resolve(APP_PATH, 'data');
 const DICT_PATH = path.resolve(APP_PATH, 'data/dict.json');
 let dict: any = {};
-fs.ensureFile(DICT_PATH)
-  .then(() => {
-    return fs.readFile(DICT_PATH, 'utf8');
-  })
-  .then(data => {
+
+(async () => {
+  try {
+    await fs.ensureFile(DICT_PATH);
+    const data = await fs.readFile(DICT_PATH, 'utf8');
     if (data) {
-      dict = JSON.parse(data);
+      dict = Object.assign(dict, JSON.parse(data));
+      // Logger.log(dict);
     }
-  })
-  .catch(err => {
+  } catch (err) {
     Logger.error(err);
-  });
+  }
+})();
 
 function importWordsData(data: string[]): Map<string, boolean> {
   if (junior) {
@@ -64,10 +65,10 @@ function importWordsData(data: string[]): Map<string, boolean> {
 }
 
 export const Dict = {
-  isCET4: (word: string) => cet4.has(word),
-  isCET6: (word: string) => cet6.has(word),
-  isToefl: (word: string) => toefl.has(word),
-  isGRE: (word: string) => gre.has(word),
+  isCET4: (word: string) => cet4.has(word.toLowerCase()),
+  isCET6: (word: string) => cet6.has(word.toLowerCase()),
+  isToefl: (word: string) => toefl.has(word.toLowerCase()),
+  isGRE: (word: string) => gre.has(word.toLowerCase()),
   wordBorderColor: {
     cet4: '#DCDFE6',
     cet6: '#E6A23C',
@@ -84,6 +85,7 @@ export const Dict = {
   getWordTranslation(word: string) {
     return new Promise(async (resolve, reject) => {
       if (dict[word]) {
+        // Logger.log('Cached:', word);
         resolve(dict[word]);
       } else {
         const url = `http://www.youdao.com/w/eng/${word}`;
@@ -115,6 +117,12 @@ export const Dict = {
     return new Promise((resolve, reject) => {
       fs.ensureFile(DICT_PATH)
         .then(() => {
+          return fs.readFile(DICT_PATH, 'utf8');
+        })
+        .then(data => {
+          if (data) {
+            dict = Object.assign(dict, JSON.parse(data));
+          }
           return fs.writeJson(DICT_PATH, dict);
         })
         .then(() => {

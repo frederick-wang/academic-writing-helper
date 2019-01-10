@@ -93,17 +93,29 @@
           style="font-weight: bolder;"
         >
           <div
-            is="p"
+            class="sentence-item"
             v-for="(sentenceItem, sentenceIndex) in importantSentences"
             :key="sentenceIndex"
           >
-            <div class="sentence">
+            <div
+              is="p"
+              class="sentence no-indent"
+            >
               <span>{{sentenceIndex + 1}}. </span>
               <span
                 v-for="(word, wordIndex) in sentenceItem.sentence"
                 :key="wordIndex"
                 :style="getWordStyle(word)"
               >{{word}}</span>
+            </div>
+            <div class="words">
+              <p
+                class="no-indent"
+                v-for="(word, wordIndex) in importantWordsOfSentences[sentenceIndex]"
+                :key="wordIndex"
+              >
+                <strong>{{word.word}}</strong>: {{word.translation.join('、')}}
+              </p>
             </div>
           </div>
         </div>
@@ -194,7 +206,7 @@
 
 <script lang="ts">
 import { ipcRenderer as ipc } from 'electron';
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { StartRouter } from '@/router';
 import { Logger, Dict, Punctuation } from '@/Tools';
 
@@ -206,6 +218,11 @@ interface SentenceItem {
 @Component
 export default class AnalyzedResult extends Vue {
   private tabName = 'article';
+  private importantWordsOfSentences: any = [];
+
+  get settings() {
+    return this.$store.state.settings;
+  }
 
   get version() {
     return process.env.VUE_APP_VERSION;
@@ -329,6 +346,57 @@ export default class AnalyzedResult extends Vue {
       )
     ];
   }
+
+  @Watch('importantSentences')
+  private importantSentencesWatcher() {
+    Logger.log('importantSentencesWatcher');
+    Logger.time('importantSentencesWatcher');
+    this.importantWordsOfSentences = Array.from({
+      length: this.importantSentences.length
+    }).map(v => ({}));
+    const { cet4, cet6, toefl, gre } = this.settings.wordWise;
+    Promise.all(
+      this.importantSentences.map(({ sentence }, index) =>
+        Promise.all(
+          [...new Set(sentence)]
+            .filter(
+              word =>
+                (cet4 && Dict.isCET4(word)) ||
+                (cet6 && Dict.isCET6(word) && !Dict.isCET4(word)) ||
+                (toefl &&
+                  Dict.isToefl(word) &&
+                  !Dict.isCET4(word) &&
+                  !Dict.isCET6(word)) ||
+                (gre &&
+                  Dict.isGRE(word) &&
+                  !Dict.isCET4(word) &&
+                  !Dict.isCET6(word) &&
+                  !Dict.isToefl(word))
+            )
+            .map(word =>
+              Dict.getWordTranslation(word).then(data => {
+                return Object.assign({ word }, data);
+              })
+            )
+        ).then(data => {
+          // Logger.log(index, data);
+          this.importantWordsOfSentences[index] = data;
+          return data;
+        })
+      )
+    )
+      .then(data => {
+        // Logger.log(data);
+      })
+      .catch(err => {
+        Logger.error(err);
+      })
+      .finally(() => {
+        Dict.saveWordsTranslation();
+        Logger.timeEnd('importantSentencesWatcher');
+      });
+  }
+
   get importantSentences(): SentenceItem[] {
     return this.analyzedResult.reduce(
       (accPara, curPara) => [
@@ -420,6 +488,10 @@ export default class AnalyzedResult extends Vue {
     );
     ipc.send('save-dialog-txt', data);
   }
+
+  private created() {
+    this.importantSentencesWatcher();
+  }
 }
 </script>
 
@@ -445,9 +517,30 @@ export default class AnalyzedResult extends Vue {
     }
   }
   .tab-sentence {
-    p {
+    .sentence-item {
       border-bottom: 1px dashed #f56c6c;
-      padding-bottom: 0.6em;
+      padding: 0.6em 0;
+      .sentence {
+        border-left: 2.5px solid #f56c6c;
+        padding-left: 0.5em;
+      }
+      .words {
+        font-size: 0.8em;
+        font-weight: lighter;
+        border-left: 1px dashed #909399;
+        padding-left: 1.25em;
+        margin-top: 0.6em;
+
+        p {
+          &:last-child {
+            margin-bottom: 0.6em;
+          }
+
+          strong {
+            font-weight: normal;
+          }
+        }
+      }
     }
   }
 
