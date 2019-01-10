@@ -5,6 +5,7 @@ import {
   createProtocol,
   installVueDevtools,
 } from 'vue-cli-plugin-electron-builder/lib';
+import got from 'got';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -77,6 +78,12 @@ if (isDevelopment) {
     });
   }
 }
+
+ipc.on('request', (event: any, url: string) => {
+  got(url).then(res => {
+    event.sender.send(`request-result-${url}`, res);
+  });
+});
 
 ipc.on('open-file-dialog', (event: any) => {
   dialog.showOpenDialog({

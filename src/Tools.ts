@@ -1,10 +1,20 @@
+import { remote, ipcRenderer as ipc } from 'electron';
+import fs from 'fs-extra';
+import path from 'path';
+import cheerio from 'cheerio';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
+const APP_PATH = remote.app.getAppPath();
 
 export const Logger = {
   log(...values: any[]) {
     if (isDevelopment) {
       console.log(...values);
+    }
+  },
+  error(...values: any[]) {
+    if (isDevelopment) {
+      console.error(...values);
     }
   },
   time(...values: any[]) {
@@ -25,6 +35,22 @@ const cet4 = importWordsData(require('@/assets/dict/cet4.json'));
 const cet6 = importWordsData(require('@/assets/dict/cet6.json'));
 const toefl = importWordsData(require('@/assets/dict/toefl.json'));
 const gre = importWordsData(require('@/assets/dict/gre.json'));
+
+// const DATA_PATH = path.resolve(APP_PATH, 'data');
+const DICT_PATH = path.resolve(APP_PATH, 'data/dict.json');
+let dict: any = {};
+fs.ensureFile(DICT_PATH)
+  .then(() => {
+    return fs.readFile(DICT_PATH, 'utf8');
+  })
+  .then(data => {
+    if (data) {
+      dict = JSON.parse(data);
+    }
+  })
+  .catch(err => {
+    Logger.error(err);
+  });
 
 function importWordsData(data: string[]): Map<string, boolean> {
   if (junior) {
@@ -55,7 +81,52 @@ export const Dict = {
     toefl: '#67C23A80',
     gre: '#409EFF80'
   },
-  getWordScore: (word: string) => {
+  getWordTranslation(word: string) {
+    return new Promise(async (resolve, reject) => {
+      if (dict[word]) {
+        resolve(dict[word]);
+      } else {
+        const url = `http://www.youdao.com/w/eng/${word}`;
+        ipc.once(`request-result-${url}`, (event: any, res: any) => {
+          const $ = cheerio.load(res.body);
+          const translation = $('#phrsListTab .trans-container ul')
+            .text()
+            .split('\n')
+            .map(v => v.trim())
+            .filter(v => v);
+          const addition = $('#phrsListTab .trans-container .additional')
+            .text()
+            .replace(/\n|\[\s+|\s+]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+          if (translation.length || addition) {
+            const result = { translation, addition };
+            dict[word] = result;
+            resolve(result);
+          } else {
+            reject(new Error(`Error 1001: The word "${word}" doesn't have translation.`));
+          }
+        });
+        ipc.send('request', url);
+      }
+    });
+  },
+  saveWordsTranslation() {
+    return new Promise((resolve, reject) => {
+      fs.ensureFile(DICT_PATH)
+        .then(() => {
+          return fs.writeJson(DICT_PATH, dict);
+        })
+        .then(() => {
+          resolve(dict);
+        })
+        .catch(err => {
+          err.message = 'Error 1002: ' + err.message;
+          reject(err);
+        });
+    });
+  },
+  getWordScore(word: string) {
     if (Dict.isCET4(word)) {
       return 1;
     }
@@ -70,7 +141,7 @@ export const Dict = {
     }
     return 0;
   },
-  getWordBackgroundColor: (word: string) => {
+  getWordBackgroundColor(word: string) {
     word = word.toLowerCase();
     if (Dict.isCET4(word)) {
       return Dict.wordBackgroundColor.cet4;
