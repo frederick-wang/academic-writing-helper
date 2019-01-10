@@ -49,7 +49,7 @@ import { NavigationGuard, Route } from 'vue-router/types/router';
 
 @Component({
   beforeRouteEnter(to, from, next) {
-    next(vm => vm.$store.commit('setOriginalText', ''));
+    next(vm => (vm as OriginalArticle).clearText());
   }
 })
 export default class OriginalArticle extends Vue {
@@ -60,7 +60,11 @@ export default class OriginalArticle extends Vue {
     this.$store.commit('setOriginalText', this.originalText);
   }
   private analyzeText() {
-    this.$router.replace(StartRouter.ANALYZED_RESULT);
+    if (this.originalText) {
+      this.$router.replace(StartRouter.ANALYZED_RESULT);
+    } else {
+      this.$message.error('抱歉，您还没有输入内容！');
+    }
   }
   private clearText() {
     this.originalText = '';
