@@ -211,6 +211,9 @@ export const Punctuation = {
   wordPunctuationRegExpG,
   /**
    * 判断是否为标点
+   * TODO: Reform the judging process.
+   * "word.match(Punctuation.wordPunctuationRegExp)" and Punctuation.is() are used meanwhile now.
+   * Due to some issues left over by history, each of two ways returns different values.
    */
   is: (v: string) => punctuations.has(v),
   /**
