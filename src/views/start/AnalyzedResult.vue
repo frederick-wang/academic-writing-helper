@@ -386,7 +386,7 @@ export default class AnalyzedResult extends Vue {
             )
         ).then(data => {
           // Logger.log(index, data);
-          this.importantWordsOfSentences[index] = data;
+          this.importantWordsOfSentences[index].splice(0, 0, ...data);
           return data;
         })
       )
