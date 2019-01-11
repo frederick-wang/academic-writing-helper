@@ -37,6 +37,10 @@ const toefl = importWordsData(require('@/assets/dict/toefl.json'));
 const gre = importWordsData(require('@/assets/dict/gre.json'));
 
 // const DATA_PATH = path.resolve(APP_PATH, 'data');
+/**
+ * 2019-1-11 08:00:16
+ * FIXME: It seems that dict.json cannot be created in build version.
+ */
 const DICT_PATH = path.resolve(APP_PATH, 'data/dict.json');
 let dict: any = {};
 
