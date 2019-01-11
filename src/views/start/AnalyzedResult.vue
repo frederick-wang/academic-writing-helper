@@ -208,7 +208,7 @@
 import { ipcRenderer as ipc } from 'electron';
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { StartRouter } from '@/router';
-import { Logger, Dict, Punctuation } from '@/Tools';
+import { Logger, Dict, Punctuation, Translation } from '@/Tools';
 
 interface SentenceItem {
   score: number;
@@ -380,7 +380,7 @@ export default class AnalyzedResult extends Vue {
                   !Dict.isToefl(word))
             )
             .map(word =>
-              Dict.getWordTranslation(word).then(data => {
+              Translation.getWordTranslation(word).then(data => {
                 return Object.assign({ word }, data) as WordItem;
               })
             )
@@ -398,7 +398,7 @@ export default class AnalyzedResult extends Vue {
         Logger.error(err);
       })
       .finally(() => {
-        Dict.saveWordsTranslation();
+        Translation.saveWordsTranslation();
         Logger.timeEnd('importantSentencesWatcher');
       });
   }

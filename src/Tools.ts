@@ -36,27 +36,6 @@ const cet6 = importWordsData(require('@/assets/dict/cet6.json'));
 const toefl = importWordsData(require('@/assets/dict/toefl.json'));
 const gre = importWordsData(require('@/assets/dict/gre.json'));
 
-// const DATA_PATH = path.resolve(APP_PATH, 'data');
-/**
- * 2019-1-11 08:00:16
- * FIXME: It seems that dict.json cannot be created in build version.
- */
-const DICT_PATH = path.resolve(APP_PATH, 'data/dict.json');
-let dict: any = {};
-
-(async () => {
-  try {
-    await fs.ensureFile(DICT_PATH);
-    const data = await fs.readFile(DICT_PATH, 'utf8');
-    if (data) {
-      dict = Object.assign(dict, JSON.parse(data));
-      // Logger.log(dict);
-    }
-  } catch (err) {
-    Logger.error(err);
-  }
-})();
-
 function importWordsData(data: string[]): Map<string, boolean> {
   if (junior) {
     return new Map(
@@ -85,58 +64,6 @@ export const Dict = {
     cet6: '#E6A23C80',
     toefl: '#67C23A80',
     gre: '#409EFF80'
-  },
-  getWordTranslation(word: string) {
-    return new Promise(async (resolve, reject) => {
-      if (dict[word]) {
-        // Logger.log('Cached:', word);
-        resolve(dict[word]);
-      } else {
-        const url = `http://www.youdao.com/w/eng/${word}`;
-        ipc.once(`request-result-${url}`, (event: any, res: any) => {
-          const $ = cheerio.load(res.body);
-          const translation = $('#phrsListTab .trans-container ul')
-            .text()
-            .split('\n')
-            .map(v => v.trim())
-            .filter(v => v);
-          const addition = $('#phrsListTab .trans-container .additional')
-            .text()
-            .replace(/\n|\[\s+|\s+]/g, '')
-            .replace(/\s+/g, ' ')
-            .trim();
-          if (translation.length || addition) {
-            const result = { translation, addition };
-            dict[word] = result;
-            resolve(result);
-          } else {
-            reject(new Error(`Error 1001: The word "${word}" doesn't have translation.`));
-          }
-        });
-        ipc.send('request', url);
-      }
-    });
-  },
-  saveWordsTranslation() {
-    return new Promise((resolve, reject) => {
-      fs.ensureFile(DICT_PATH)
-        .then(() => {
-          return fs.readFile(DICT_PATH, 'utf8');
-        })
-        .then(data => {
-          if (data) {
-            dict = Object.assign(dict, JSON.parse(data));
-          }
-          return fs.writeJson(DICT_PATH, dict);
-        })
-        .then(() => {
-          resolve(dict);
-        })
-        .catch(err => {
-          err.message = 'Error 1002: ' + err.message;
-          reject(err);
-        });
-    });
   },
   getWordScore(word: string) {
     if (Dict.isCET4(word)) {
@@ -170,6 +97,88 @@ export const Dict = {
     return Dict.wordBackgroundColor.none;
   }
 };
+
+// Translation
+let dict: any;
+export const Translation = (() => {
+  // const DATA_PATH = path.resolve(APP_PATH, 'data');
+  /**
+   * 2019-1-11 08:00:16
+   * FIXME: It seems that dict.json cannot be created in build version.
+   */
+  const DICT_PATH = path.resolve(APP_PATH, 'data/dict.json');
+  dict = {};
+
+  (async () => {
+    try {
+      await fs.ensureFile(DICT_PATH);
+      const data = await fs.readFile(DICT_PATH, 'utf8');
+      if (data) {
+        dict = Object.assign(dict, JSON.parse(data));
+      }
+    } catch (err) {
+      Logger.error(err);
+    }
+  })();
+  return {
+    getWordTranslation(word: string) {
+      /**
+       * 2019-1-11 22:47:13
+       * TODO: Need to limit concurrency.
+       */
+      return new Promise(async (resolve, reject) => {
+        if (dict[word]) {
+          // Logger.log('Cached:', word);
+          resolve(dict[word]);
+        } else {
+          const url = `http://www.youdao.com/w/eng/${word}`;
+          ipc.once(`request-result-${url}`, (event: any, res: any) => {
+            const $ = cheerio.load(res.body);
+            const translation = $('#phrsListTab .trans-container ul')
+              .text()
+              .split('\n')
+              .map(v => v.trim())
+              .filter(v => v);
+            const addition = $('#phrsListTab .trans-container .additional')
+              .text()
+              .replace(/\n|\[\s+|\s+]/g, '')
+              .replace(/\s+/g, ' ')
+              .trim();
+            if (translation.length || addition) {
+              const result = { translation, addition };
+              dict[word] = result;
+              resolve(result);
+            } else {
+              reject(new Error(`Error 1001: The word "${word}" doesn't have translation.`));
+            }
+          });
+          ipc.send('request', url);
+        }
+      });
+    },
+    saveWordsTranslation() {
+      return new Promise((resolve, reject) => {
+        fs.ensureFile(DICT_PATH)
+          .then(() => {
+            return fs.readFile(DICT_PATH, 'utf8');
+          })
+          .then(data => {
+            if (data) {
+              dict = Object.assign(dict, JSON.parse(data));
+            }
+            return fs.writeJson(DICT_PATH, dict);
+          })
+          .then(() => {
+            resolve(dict);
+          })
+          .catch(err => {
+            err.message = 'Error 1002: ' + err.message;
+            reject(err);
+          });
+      });
+    }
+  };
+})();
 
 // Punctuation
 const sentencePunctuationRegExp = /.+?(;|(\.{3}|\.)|\?|!|…|$)/;
