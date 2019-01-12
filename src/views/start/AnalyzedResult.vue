@@ -208,7 +208,7 @@
 import { ipcRenderer as ipc } from 'electron';
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { StartRouter } from '@/router';
-import { Logger, Dict, Punctuation, Translation } from '@/Tools';
+import { Logger, Dict, Punctuation, Translation, Text } from '@/Tools';
 
 interface SentenceItem {
   score: number;
@@ -286,7 +286,7 @@ export default class AnalyzedResult extends Vue {
     const splitSentence = (str: string) =>
       str
         .trim()
-        .split(Punctuation.wordPunctuationRegExp)
+        .split(Text.separatorRegExp)
         .filter(v => v);
 
     /**
@@ -419,7 +419,7 @@ export default class AnalyzedResult extends Vue {
 
   private getSentenceScore(convertedSentence: string[]) {
     const sentenceWords = convertedSentence.filter(
-      v => !v.match(Punctuation.wordPunctuationRegExp)
+      v => !Text.isSeparator(v)
     );
 
     /**
@@ -448,7 +448,7 @@ export default class AnalyzedResult extends Vue {
     return getTotalScore(sentenceWords)(sentenceWords.length);
   }
   private getWordStyle(word: string) {
-    if (word.match(Punctuation.wordPunctuationRegExp)) {
+    if (Text.isSeparator(word)) {
       return {
         padding: '0'
       };

@@ -183,10 +183,6 @@ export const Translation = (() => {
 // Punctuation
 const sentencePunctuationRegExp = /.+?(;|(\.{3}|\.)|\?|!|…|$)/;
 const sentencePunctuationRegExpG = /.+?(;|(\.{3}|\.)|\?|!|…|$)/g;
-const wordPunctuationRegExp =
-  /(\s+|:|,|"|~|`|(?:--|-)|\\|\/|<|>|\{|\}|\[|\]|\+|\*|_|\(|\)|&|\^|%|\$|#|@|\||’|;|(?:\.{3}|\.)|\?|!|…)/;
-const wordPunctuationRegExpG =
-  /(\s+|:|,|"|~|`|(?:--|-)|\\|\/|<|>|\{|\}|\[|\]|\+|\*|_|\(|\)|&|\^|%|\$|#|@|\||’|;|(?:\.{3}|\.)|\?|!|…)/g;
 const punctuations = new Map([
   [':', true],
   [',', true],
@@ -228,14 +224,6 @@ const punctuations = new Map([
 export const Punctuation = {
   sentencePunctuationRegExp,
   sentencePunctuationRegExpG,
-  wordPunctuationRegExp,
-  wordPunctuationRegExpG,
-  /**
-   * 判断是否为标点
-   * TODO: Reform the judging process.
-   * "word.match(Punctuation.wordPunctuationRegExp)" and Punctuation.is() are used meanwhile now.
-   * Due to some issues left over by history, each of two ways returns different values.
-   */
   is: (v: string) => punctuations.has(v),
   /**
    * 将文本中的中文标点转化为英文标点
@@ -257,4 +245,15 @@ export const Punctuation = {
   // .replace(/’/g, '\'')
 };
 
-export default { Logger, Dict, Punctuation };
+export const Text = (() => {
+  const separatorRegExp =
+    /(\s+|:|,|"|~|`|(?:--|-)|\\|\/|<|>|\{|\}|\[|\]|\+|\*|_|\(|\)|&|\^|%|\$|#|@|\||’|;|(?:\.{3}|\.)|\?|!|…)/;
+  const separatorRegExpG =
+    /(\s+|:|,|"|~|`|(?:--|-)|\\|\/|<|>|\{|\}|\[|\]|\+|\*|_|\(|\)|&|\^|%|\$|#|@|\||’|;|(?:\.{3}|\.)|\?|!|…)/g;
+  return {
+    separatorRegExp, separatorRegExpG,
+    isSeparator: (word: string) => !!word.match(separatorRegExp)
+  };
+})();
+
+export default { Logger, Dict, Punctuation, Translation, Text };
