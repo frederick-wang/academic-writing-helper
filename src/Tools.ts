@@ -181,6 +181,14 @@ export const Translation = (() => {
 })();
 
 // Punctuation
+/**
+ * 2019-1-13 06:53:36
+ * TODO: These scattered external variables should be hidden, with closures.
+ */
+/**
+ * 2019-1-13 06:43:40
+ * TODO: Use RegExp Constructors to simplify codes of next two lines.
+ */
 const sentencePunctuationRegExp = /.+?(;|(\.{3}|\.)|\?|!|…|$)/;
 const sentencePunctuationRegExpG = /.+?(;|(\.{3}|\.)|\?|!|…|$)/g;
 const punctuations = new Map([
@@ -245,7 +253,16 @@ export const Punctuation = {
   // .replace(/’/g, '\'')
 };
 
+// Text
+/**
+ * 2019-1-13 06:50:51
+ * TODO: The Text Object should include more text separation methods extracted from AnalyzedResult.
+ */
 export const Text = (() => {
+  /**
+   * 2019-1-13 2019-1-13 06:49:59
+   * TODO: Use RegExp Constructors to simplify codes of next two lines.
+   */
   const separatorRegExp =
     /(\s+|:|,|"|~|`|(?:--|-)|\\|\/|<|>|\{|\}|\[|\]|\+|\*|_|\(|\)|&|\^|%|\$|#|@|\||’|;|(?:\.{3}|\.)|\?|!|…)/;
   const separatorRegExpG =
