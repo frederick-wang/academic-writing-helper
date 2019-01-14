@@ -208,7 +208,7 @@
 import { ipcRenderer as ipc } from 'electron';
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { StartRouter } from '@/router';
-import { Logger, Dict, Punctuation, Translation, Text } from '@/Tools';
+import { Logger, Dict, Punctuation, Translation, Text } from '@/Utils';
 
 interface SentenceItem {
   score: number;

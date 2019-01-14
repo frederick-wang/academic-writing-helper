@@ -23,7 +23,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Router, StartRouter } from '@/router';
-import { Logger } from '@/Tools';
+import { Logger } from '@/Utils';
 
 @Component
 export default class Aside extends Vue {

@@ -76,7 +76,7 @@
 
 <script lang="ts">
 import { Component, Vue} from 'vue-property-decorator';
-import { Logger } from '@/Tools';
+import { Logger } from '@/Utils';
 
 @Component
 export default class Settings extends Vue {

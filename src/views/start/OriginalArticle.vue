@@ -44,7 +44,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { StartRouter } from '@/router';
-import { Logger, Dict, Punctuation } from '@/Tools';
+import { Logger, Dict, Punctuation } from '@/Utils';
 import { NavigationGuard, Route } from 'vue-router/types/router';
 
 @Component({
