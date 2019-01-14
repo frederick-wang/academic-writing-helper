@@ -270,24 +270,10 @@ export default class AnalyzedResult extends Vue {
       return [];
     }
 
-    const tidyCRLF = (str: string) =>
-      str
-        .replace(/\r/g, '\n')
-        .replace(/\n\s+\n/g, '\n\n')
-        .replace(/\n{2,}/g, '\n')
-        .replace(/^\n/, '');
-
-    const splitParagraph = (str: string) =>
-      str
-        .split('\n')
-        .map(v => v.trim())
-        .filter(v => v);
+    const splitParagraph = (str: string) => Text.split(str, '\n');
 
     const splitSentence = (str: string) =>
-      str
-        .trim()
-        .split(Text.separatorRegExp)
-        .filter(v => v);
+      Text.split(str, Text.separatorRegExp);
 
     /**
      * 文本预处理函数
@@ -295,7 +281,7 @@ export default class AnalyzedResult extends Vue {
      * @returns 处理好的文本，为一个按照段落分开的 string[]
      */
     const preProcessText = (text: string) =>
-      splitParagraph(tidyCRLF(Punctuation.normalizeText(text)));
+      splitParagraph(Text.tidyCRLF(Punctuation.normalizeText(text)));
 
     const paragraphs = preProcessText(this.originalText);
 
@@ -418,9 +404,7 @@ export default class AnalyzedResult extends Vue {
   }
 
   private getSentenceScore(convertedSentence: string[]) {
-    const sentenceWords = convertedSentence.filter(
-      v => !Text.isSeparator(v)
-    );
+    const sentenceWords = convertedSentence.filter(v => !Text.isSeparator(v));
 
     /**
      * 2019-1-8 04:35:48

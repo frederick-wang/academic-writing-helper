@@ -1,3 +1,8 @@
+/**
+ * 2019-1-14 05:15:11
+ * TODO: Add comments to each of exported Objects.
+ */
+
 import { remote, ipcRenderer as ipc } from 'electron';
 import fs from 'fs-extra';
 import path from 'path';
@@ -250,10 +255,6 @@ export const Punctuation = (() => {
 })();
 
 // Text
-/**
- * 2019-1-13 06:50:51
- * TODO: The Text Object should include more text separation methods extracted from AnalyzedResult.
- */
 export const Text = (() => {
   const regExpPattern =
     // tslint:disable-next-line max-line-length
@@ -263,7 +264,19 @@ export const Text = (() => {
 
   return {
     separatorRegExp, separatorRegExpG,
-    isSeparator: (word: string) => !!word.match(separatorRegExp)
+    isSeparator: (word: string) => !!word.match(separatorRegExp),
+    tidyCRLF: (str: string) =>
+      str
+        .replace(/\r/g, '\n')
+        .replace(/\n\s+\n/g, '\n\n')
+        .replace(/\n{2,}/g, '\n')
+        .replace(/^\n/, ''),
+    split: (str: string, separator: string | RegExp) =>
+      str
+        .trim()
+        .split(separator)
+        .map(v => v.trim())
+        .filter(v => v)
   };
 })();
 
