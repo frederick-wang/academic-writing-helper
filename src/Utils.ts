@@ -180,7 +180,10 @@ export const Translation = (() => {
           if (data) {
             dict = Object.assign(dict, JSON.parse(data));
           }
-          fs.writeJsonSync(DICT_PATH, dict);
+          const newData = JSON.stringify(dict);
+          if (newData !== data) {
+            fs.writeFileSync(DICT_PATH, newData);
+          }
           resolve(dict);
         } catch (err) {
           err.message = 'Error 1003: ' + err.message;
