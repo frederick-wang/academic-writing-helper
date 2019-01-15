@@ -353,17 +353,10 @@ export default class AnalyzedResult extends Vue {
           [...new Set(sentence)]
             .filter(
               word =>
-                (cet4 && Dict.isCET4(word)) ||
-                (cet6 && Dict.isCET6(word) && !Dict.isCET4(word)) ||
-                (toefl &&
-                  Dict.isToefl(word) &&
-                  !Dict.isCET4(word) &&
-                  !Dict.isCET6(word)) ||
-                (gre &&
-                  Dict.isGRE(word) &&
-                  !Dict.isCET4(word) &&
-                  !Dict.isCET6(word) &&
-                  !Dict.isToefl(word))
+                (cet4 && Dict.isCET4UniquelyDownward(word)) ||
+                (cet6 && Dict.isCET6UniquelyDownward(word)) ||
+                (toefl && Dict.isToeflUniquelyDownward(word)) ||
+                (gre && Dict.isGREUniquelyDownward(word))
             )
             .map(word =>
               Translation.getWordTranslation(word).then(data => {

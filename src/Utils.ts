@@ -58,6 +58,20 @@ export const Dict = (() => {
     isCET6: (word: string) => cet6.has(word.toLowerCase()),
     isToefl: (word: string) => toefl.has(word.toLowerCase()),
     isGRE: (word: string) => gre.has(word.toLowerCase()),
+    isCET4UniquelyDownward: (word: string) =>
+      Dict.isCET4(word),
+    isCET6UniquelyDownward: (word: string) =>
+      Dict.isCET6(word) &&
+      !Dict.isCET4(word),
+    isToeflUniquelyDownward: (word: string) =>
+      Dict.isToefl(word) &&
+      !Dict.isCET4(word) &&
+      !Dict.isCET6(word),
+    isGREUniquelyDownward: (word: string) =>
+      Dict.isGRE(word) &&
+      !Dict.isCET4(word) &&
+      !Dict.isCET6(word) &&
+      !Dict.isToefl(word),
     wordBorderColor: {
       cet4: '#DCDFE6',
       cet6: '#E6A23C',
