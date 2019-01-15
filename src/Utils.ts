@@ -1,8 +1,3 @@
-/**
- * 2019-1-14 05:15:11
- * TODO: Add comments to each of exported Objects.
- */
-
 import { remote, ipcRenderer as ipc } from 'electron';
 import fs from 'fs-extra';
 import path from 'path';
@@ -11,6 +6,9 @@ import cheerio from 'cheerio';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const APP_PATH = remote.app.getAppPath();
 
+/**
+ * 处理调试输出的辅助对象
+ */
 export const Logger = {
   log(...values: any[]) {
     if (isDevelopment) {
@@ -33,7 +31,9 @@ export const Logger = {
   }
 };
 
-// Dict
+/**
+ * 处理分级词汇表的辅助对象
+ */
 export const Dict = (() => {
   const importWordsData = (data: string[]): Map<string, boolean> => {
     if (junior) {
@@ -105,7 +105,9 @@ export const Dict = (() => {
   };
 })();
 
-// Translation
+/**
+ * 处理翻译的辅助对象
+ */
 export const Translation = (() => {
   // const DATA_PATH = path.resolve(APP_PATH, 'data');
   /**
@@ -186,7 +188,9 @@ export const Translation = (() => {
   };
 })();
 
-// Punctuation
+/**
+ * 处理标点的辅助对象
+ */
 export const Punctuation = (() => {
   const regExpPattern = `.+?(;|(\\\.{3}|\\\.)|\\\?|!|…|$)`;
   const sentencePunctuationRegExp = new RegExp(regExpPattern);
@@ -254,7 +258,9 @@ export const Punctuation = (() => {
   };
 })();
 
-// Text
+/**
+ * 处理文本的辅助对象
+ */
 export const Text = (() => {
   const regExpPattern =
     // tslint:disable-next-line max-line-length
