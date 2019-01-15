@@ -4,7 +4,7 @@ import path from 'path';
 import cheerio from 'cheerio';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
-const APP_PATH = remote.app.getAppPath();
+const APP_PATH = remote.app.getPath('userData');
 
 /**
  * 处理调试输出的辅助对象
@@ -123,25 +123,20 @@ export const Dict = (() => {
  * 处理翻译的辅助对象
  */
 export const Translation = (() => {
-  // const DATA_PATH = path.resolve(APP_PATH, 'data');
-  /**
-   * 2019-1-11 08:00:16
-   * FIXME: It seems that dict.json cannot be created in build version.
-   */
   const DICT_PATH = path.resolve(APP_PATH, 'data/dict.json');
   let dict: any = {};
 
-  (async () => {
-    try {
-      await fs.ensureFile(DICT_PATH);
-      const data = await fs.readFile(DICT_PATH, 'utf8');
-      if (data) {
-        dict = Object.assign(dict, JSON.parse(data));
-      }
-    } catch (err) {
-      Logger.error(err);
+  try {
+    fs.ensureFileSync(DICT_PATH);
+    const data = fs.readFileSync(DICT_PATH, 'utf8');
+    if (data) {
+      dict = Object.assign(dict, JSON.parse(data));
     }
-  })();
+  } catch (err) {
+    err.message = 'Error 1001: ' + err.message;
+    Logger.error(err);
+  }
+
   return {
     getWordTranslation(word: string) {
       /**
@@ -150,7 +145,6 @@ export const Translation = (() => {
        */
       return new Promise(async (resolve, reject) => {
         if (dict[word]) {
-          // Logger.log('Cached:', word);
           resolve(dict[word]);
         } else {
           const url = `http://www.youdao.com/w/eng/${word}`;
@@ -171,7 +165,7 @@ export const Translation = (() => {
               dict[word] = result;
               resolve(result);
             } else {
-              reject(new Error(`Error 1001: The word "${word}" doesn't have translation.`));
+              reject(new Error(`Error 1002: The word "${word}" doesn't have translation.`));
             }
           });
           ipc.send('request', url);
@@ -180,23 +174,18 @@ export const Translation = (() => {
     },
     saveWordsTranslation() {
       return new Promise((resolve, reject) => {
-        fs.ensureFile(DICT_PATH)
-          .then(() => {
-            return fs.readFile(DICT_PATH, 'utf8');
-          })
-          .then(data => {
-            if (data) {
-              dict = Object.assign(dict, JSON.parse(data));
-            }
-            return fs.writeJson(DICT_PATH, dict);
-          })
-          .then(() => {
-            resolve(dict);
-          })
-          .catch(err => {
-            err.message = 'Error 1002: ' + err.message;
-            reject(err);
-          });
+        try {
+          fs.ensureFileSync(DICT_PATH);
+          const data = fs.readFileSync(DICT_PATH, 'utf8');
+          if (data) {
+            dict = Object.assign(dict, JSON.parse(data));
+          }
+          fs.writeJsonSync(DICT_PATH, dict);
+          resolve(dict);
+        } catch (err) {
+          err.message = 'Error 1003: ' + err.message;
+          reject(err);
+        }
       });
     }
   };
