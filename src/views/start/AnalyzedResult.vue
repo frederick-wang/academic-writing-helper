@@ -248,7 +248,7 @@ export default class AnalyzedResult extends Vue {
 
   get importanceStandard() {
     /**
-     * 临时存放所有句子的得分，按从大到小排列
+     * Temporarily store the scores of all sentences， in order from largest to smallest.
      */
     const allScores = this.analyzedResult
       .reduce(
@@ -259,7 +259,8 @@ export default class AnalyzedResult extends Vue {
         [] as number[]
       )
       .sort((a, b) => b - a);
-    // 取 20% 处的得分为重点句的标准，如果当前没有句子的话，就返回 0
+    // Take the score of 20% as the standard of important sentences.
+    // If there is no sentence at present, return 0.
     return allScores[Math.floor(allScores.length * 0.2)] || 0;
   }
 
@@ -276,9 +277,9 @@ export default class AnalyzedResult extends Vue {
       Text.split(str, Text.separatorRegExp);
 
     /**
-     * 文本预处理函数
-     * @param text 需要预处理的文本
-     * @returns 处理好的文本，为一个按照段落分开的 string[]
+     * Text preprocessing.
+     * @param text Text that needs to be preprocessed
+     * @returns Processed text separated by paragraph, as a string[].
      */
     const preProcessText = (text: string) =>
       splitParagraph(Text.tidyCRLF(Punctuation.normalizeText(text)));
@@ -339,6 +340,9 @@ export default class AnalyzedResult extends Vue {
     ];
   }
 
+  /**
+   * When the set of important sentences changes, get translations of important words.
+   */
   @Watch('importantSentences')
   private importantSentencesWatcher() {
     Logger.log('importantSentencesWatcher');
@@ -382,6 +386,9 @@ export default class AnalyzedResult extends Vue {
       });
   }
 
+  /**
+   * Get all sentences whose score is above the standard.
+   */
   get importantSentences(): SentenceItem[] {
     return this.analyzedResult.reduce(
       (accPara, curPara) => [
