@@ -19,9 +19,9 @@
         class="upload-document"
         drag
         action="/"
-        :http-request="handleHttpRequest"
+        :http-request="mockHttpRequest"
         :limit="1"
-        :on-success="HandleSuccess"
+        :on-success="onFileUploadSuccess"
       >
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或<em>点击导入</em></div>
@@ -59,6 +59,7 @@ export default class OriginalArticle extends Vue {
   private originalTextWatcher() {
     this.$store.commit('setOriginalText', this.originalText);
   }
+
   private analyzeText() {
     if (this.originalText) {
       this.$router.replace(StartRouter.ANALYZED_RESULT);
@@ -66,13 +67,25 @@ export default class OriginalArticle extends Vue {
       this.$message.error('抱歉，您还没有输入内容！');
     }
   }
+
+  /**
+   * Empty the textarea.
+   */
   private clearText() {
     this.originalText = '';
   }
-  private HandleSuccess(file: any, fileList: any[]) {
+
+  /**
+   * After the file contents have been read successfully, clear the list of files.
+   */
+  private onFileUploadSuccess(file: any, fileList: any[]) {
     setTimeout((this.$refs.uploadDocument as any).clearFiles, 3000);
   }
-  private handleHttpRequest({ file }: { file: any }) {
+
+  /**
+   * Overrides the default upload behavior and reads the contents of the file directly locally.
+   */
+  private mockHttpRequest({ file }: { file: any }) {
     return new Promise((resolve, reject) => {
       if (file.type === 'text/plain') {
         // eslint-disable-next-line
