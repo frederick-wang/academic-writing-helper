@@ -2,6 +2,7 @@ import { remote, ipcRenderer as ipc } from 'electron';
 import fs from 'fs-extra';
 import path from 'path';
 import cheerio from 'cheerio';
+import async from 'async';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const APP_PATH = remote.app.getPath('userData');
@@ -138,14 +139,24 @@ export const Translation = (() => {
   }
 
   return {
+    getWordCollectionTranslation(words: string[], limit: number) {
+      return new Promise((resolve, reject) => {
+        async.mapLimit(
+          words,
+          limit,
+          async word => await Translation.getWordTranslation(word),
+          (err, results) => {
+            if (err) {
+              reject(err);
+            }
+            resolve(results);
+          });
+      });
+    },
     getWordTranslation(word: string) {
-      /**
-       * 2019-1-11 22:47:13
-       * TODO: Need to limit concurrency.
-       */
       return new Promise(async (resolve, reject) => {
         if (dict[word]) {
-          resolve(dict[word]);
+          resolve(Object.assign({ word }, dict[word]));
         } else {
           const url = `http://www.youdao.com/w/eng/${word}`;
           ipc.once(`request-result-${url}`, (event: any, res: any) => {
@@ -163,7 +174,7 @@ export const Translation = (() => {
             if (translation.length || addition) {
               const result = { translation, addition };
               dict[word] = result;
-              resolve(result);
+              resolve(Object.assign({ word }, dict[word]));
             } else {
               reject(new Error(`Error 1002: The word "${word}" doesn't have translation.`));
             }

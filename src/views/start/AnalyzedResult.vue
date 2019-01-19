@@ -364,11 +364,11 @@ export default class AnalyzedResult extends Vue {
             )
             .map(word =>
               Translation.getWordTranslation(word).then(data => {
-                return Object.assign({ word }, data) as WordItem;
+                return data as WordItem;
               })
             )
         ).then(data => {
-          // Logger.log(index, data);
+          Logger.log(index, data);
           this.importantWordsOfSentences[index].splice(0, 0, ...data);
           return data;
         })

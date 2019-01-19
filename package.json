@@ -21,6 +21,7 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "async": "^2.6.1",
     "cheerio": "^1.0.0-rc.2",
     "element-ui": "^2.4.5",
     "fs-extra": "^7.0.1",
@@ -32,6 +33,7 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "@types/async": "^2.4.0",
     "@types/cheerio": "^0.22.10",
     "@types/fs-extra": "^5.0.4",
     "@types/got": "^9.3.0",
