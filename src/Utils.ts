@@ -3,6 +3,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import cheerio from 'cheerio';
 import async from 'async';
+import { WordItem } from '@/interface';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const APP_PATH = remote.app.getPath('userData');
@@ -140,21 +141,25 @@ export const Translation = (() => {
 
   return {
     getWordCollectionTranslation(words: string[], limit: number) {
-      return new Promise((resolve, reject) => {
+      return new Promise<WordItem[]>((resolve, reject) => {
         async.mapLimit(
           words,
           limit,
-          async word => await Translation.getWordTranslation(word),
+          (word, callback) => {
+            Translation.getWordTranslation(word)
+              .then(data => callback(null, data))
+              .catch(err => callback(err));
+          },
           (err, results) => {
             if (err) {
               reject(err);
             }
-            resolve(results);
+            resolve(results as WordItem[]);
           });
       });
     },
     getWordTranslation(word: string) {
-      return new Promise(async (resolve, reject) => {
+      return new Promise<WordItem>(async (resolve, reject) => {
         if (dict[word]) {
           resolve(Object.assign({ word }, dict[word]));
         } else {

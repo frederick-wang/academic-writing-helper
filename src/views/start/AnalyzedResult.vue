@@ -209,17 +209,8 @@ import { ipcRenderer as ipc } from 'electron';
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { StartRouter } from '@/router';
 import { Logger, Dict, Punctuation, Translation, Text } from '@/Utils';
-
-interface SentenceItem {
-  score: number;
-  sentence: string[];
-}
-
-interface WordItem {
-  word: string;
-  translation: string[];
-  addition: string;
-}
+import { SentenceItem, WordItem } from '@/interface';
+import { mapLimit } from 'async';
 
 @Component
 export default class AnalyzedResult extends Vue {
@@ -341,49 +332,43 @@ export default class AnalyzedResult extends Vue {
   }
 
   /**
-   * When the set of important sentences changes, get translations of important words.
+   * Get translations of important words.
    */
-  @Watch('importantSentences')
-  private importantSentencesWatcher() {
-    Logger.log('importantSentencesWatcher');
-    Logger.time('importantSentencesWatcher');
+  private getImportantSentenceTranslations() {
     this.importantWordsOfSentences = Array.from({
       length: this.importantSentences.length
     }).map(v => []);
     const { cet4, cet6, toefl, gre } = this.settings.wordWise;
-    Promise.all(
-      this.importantSentences.map(({ sentence }, index) =>
-        Promise.all(
-          [...new Set(sentence)]
-            .filter(
-              word =>
-                (cet4 && Dict.isCET4UniquelyDownward(word)) ||
-                (cet6 && Dict.isCET6UniquelyDownward(word)) ||
-                (toefl && Dict.isToeflUniquelyDownward(word)) ||
-                (gre && Dict.isGREUniquelyDownward(word))
-            )
-            .map(word =>
-              Translation.getWordTranslation(word).then(data => {
-                return data as WordItem;
-              })
-            )
-        ).then(data => {
-          Logger.log(index, data);
-          this.importantWordsOfSentences[index].splice(0, 0, ...data);
-          return data;
-        })
-      )
-    )
-      .then(data => {
-        // Logger.log(data);
-      })
-      .catch(err => {
-        Logger.error(err);
-      })
-      .finally(() => {
-        Translation.saveWordsTranslation();
-        Logger.timeEnd('importantSentencesWatcher');
-      });
+    setTimeout(() => {
+      mapLimit(
+        this.importantSentences.map(({ sentence }, index) => ({
+          words: [...new Set(sentence)].filter(
+            word =>
+              (cet4 && Dict.isCET4UniquelyDownward(word)) ||
+              (cet6 && Dict.isCET6UniquelyDownward(word)) ||
+              (toefl && Dict.isToeflUniquelyDownward(word)) ||
+              (gre && Dict.isGREUniquelyDownward(word))
+          ),
+          index
+        })),
+        5,
+        ({ words, index }, callback) => {
+          Translation.getWordCollectionTranslation(words, 10)
+            .then(data => {
+              this.importantWordsOfSentences[index].splice(0, 0, ...data);
+              callback(null, data);
+            })
+            .catch(err => callback(err));
+        },
+        (err, results) => {
+          if (err) {
+            Logger.error(err);
+            return;
+          }
+          Translation.saveWordsTranslation();
+        }
+      );
+    }, 1000);
   }
 
   /**
@@ -489,7 +474,7 @@ export default class AnalyzedResult extends Vue {
   }
 
   private created() {
-    this.importantSentencesWatcher();
+    this.getImportantSentenceTranslations();
   }
 }
 </script>
