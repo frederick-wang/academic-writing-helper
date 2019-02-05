@@ -50,7 +50,7 @@
                 v-for="(word, wordIndex) in sentenceItem.sentence"
                 :key="wordIndex"
                 :style="getWordStyle(word)"
-              >{{word}}</span>
+              >{{word}} </span>
             </div>
           </div>
         </div>
@@ -106,7 +106,7 @@
                 v-for="(word, wordIndex) in sentenceItem.sentence"
                 :key="wordIndex"
                 :style="getWordStyle(word)"
-              >{{word}}</span>
+              >{{word}} </span>
             </div>
             <div class="words">
               <p
@@ -445,7 +445,7 @@ export default class AnalyzedResult extends Vue {
     const content = this.importantSentences.reduce(
       (acc, cur, i, arr) =>
         acc +
-        `${i + 1}. ${cur.sentence.join('')}` +
+        `${i + 1}. ${cur.sentence.join(' ')}` +
         convertSentenceWords(this.importantWordsOfSentences[i]) +
         (arr.length - i - 1 ? '\r\n\r\n' : '\r\n'),
       ''
