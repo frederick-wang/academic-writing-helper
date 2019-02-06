@@ -75,6 +75,10 @@
 </template>
 
 <script lang="ts">
+/**
+ * 2019-2-6 23:20:14
+ * TODO: 设置需要能保存，不能每次打开重新设置
+ */
 import { Component, Vue} from 'vue-property-decorator';
 import { Logger } from '@/Utils';
 
