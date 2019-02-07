@@ -1,3 +1,8 @@
+/**
+ * 2019-2-7 23:41:34
+ * TODO: 需要把utils作为一个package，底下的对象作为类提供静态方法调用
+ */
+
 import { remote, ipcRenderer as ipc } from 'electron';
 import fs from 'fs-extra';
 import path from 'path';
