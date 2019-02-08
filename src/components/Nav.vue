@@ -17,7 +17,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Router } from '@/router';
-import { Logger } from '@/Utils';
+import Logger from '@/utils/Logger';
 
 @Component
 export default class Nav extends Vue {

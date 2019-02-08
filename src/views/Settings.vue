@@ -80,7 +80,7 @@
  * TODO: 设置需要能保存，不能每次打开重新设置
  */
 import { Component, Vue} from 'vue-property-decorator';
-import { Logger } from '@/Utils';
+import Logger from '@/utils/Logger';
 
 @Component
 export default class Settings extends Vue {

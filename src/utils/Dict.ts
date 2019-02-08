@@ -5,6 +5,19 @@
  * @class Dict
  */
 export default class Dict {
+  private static junior = Dict.importWordsData(
+    require('@/assets/dict/junior.json')
+  );
+  private static cet4 = Dict.importWordsData(
+    require('@/assets/dict/cet4.json')
+  );
+  private static cet6 = Dict.importWordsData(
+    require('@/assets/dict/cet6.json')
+  );
+  private static toefl = Dict.importWordsData(
+    require('@/assets/dict/toefl.json')
+  );
+  private static gre = Dict.importWordsData(require('@/assets/dict/gre.json'));
   public static wordBorderColor = {
     cet4: '#DCDFE6',
     cet6: '#E6A23C',
@@ -18,6 +31,17 @@ export default class Dict {
     toefl: '#67C23A80',
     gre: '#409EFF80'
   };
+
+  private static importWordsData(data: string[]): Map<string, boolean> {
+    if (Dict.junior) {
+      return new Map(
+        data
+          .filter(v => !Dict.junior.has(v))
+          .map((v: string): [string, boolean] => [v, true])
+      );
+    }
+    return new Map(data.map((v: string): [string, boolean] => [v, true]));
+  }
 
   public static isCET4(word: string) {
     return Dict.cet4.has(word.toLowerCase());
@@ -86,30 +110,5 @@ export default class Dict {
       return Dict.wordBackgroundColor.gre;
     }
     return Dict.wordBackgroundColor.none;
-  }
-
-  private static junior = Dict.importWordsData(
-    require('@/assets/dict/junior.json')
-  );
-  private static cet4 = Dict.importWordsData(
-    require('@/assets/dict/cet4.json')
-  );
-  private static cet6 = Dict.importWordsData(
-    require('@/assets/dict/cet6.json')
-  );
-  private static toefl = Dict.importWordsData(
-    require('@/assets/dict/toefl.json')
-  );
-  private static gre = Dict.importWordsData(require('@/assets/dict/gre.json'));
-
-  private static importWordsData(data: string[]): Map<string, boolean> {
-    if (Dict.junior) {
-      return new Map(
-        data
-          .filter(v => !Dict.junior.has(v))
-          .map((v: string): [string, boolean] => [v, true])
-      );
-    }
-    return new Map(data.map((v: string): [string, boolean] => [v, true]));
   }
 }
