@@ -25,6 +25,7 @@
     "no-var-requires": false,
     "no-console": false,
     "trailing-comma": false,
-    "arrow-parens": false
+    "arrow-parens": false,
+    "member-ordering": false
   }
 }
