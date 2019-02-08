@@ -208,7 +208,9 @@
 import { ipcRenderer as ipc } from 'electron';
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { StartRouter } from '@/router';
-import { Logger, Dict, Punctuation, Translation, Text } from '@/Utils';
+import { Punctuation, Translation, Text } from '@/Utils';
+import Dict from '@/utils/Dict';
+import Logger from '@/utils/Logger';
 import { SentenceItem, WordItem } from '@/interface';
 import { mapLimit } from 'async';
 

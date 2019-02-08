@@ -1,130 +1,11 @@
-/**
- * 2019-2-7 23:41:34
- * TODO: 需要把utils作为一个package，底下的对象作为类提供静态方法调用
- */
-
 import { remote, ipcRenderer as ipc } from 'electron';
 import fs from 'fs-extra';
 import path from 'path';
 import cheerio from 'cheerio';
 import async from 'async';
 import { WordItem } from '@/interface';
-
-const isDevelopment = process.env.NODE_ENV !== 'production';
+import Logger from '@/utils/Logger';
 const APP_PATH = remote.app.getPath('userData');
-
-/**
- * 处理调试输出的辅助对象
- */
-export const Logger = {
-  log(...values: any[]) {
-    if (isDevelopment) {
-      console.log(...values);
-    }
-  },
-  error(...values: any[]) {
-    if (isDevelopment) {
-      console.error(...values);
-    }
-  },
-  time(...values: any[]) {
-    if (isDevelopment) {
-      console.time(...values);
-    }
-  }, timeEnd(...values: any[]) {
-    if (isDevelopment) {
-      console.timeEnd(...values);
-    }
-  }
-};
-
-/**
- * 处理分级词汇表的辅助对象
- */
-export const Dict = (() => {
-  const importWordsData = (data: string[]): Map<string, boolean> => {
-    if (junior) {
-      return new Map(
-        data
-          .filter(v => !junior.has(v))
-          .map((v: string): [string, boolean] => [v, true])
-      );
-    }
-    return new Map(data.map((v: string): [string, boolean] => [v, true]));
-  };
-
-  let junior: any;
-  junior = importWordsData(require('@/assets/dict/junior.json'));
-  const cet4 = importWordsData(require('@/assets/dict/cet4.json'));
-  const cet6 = importWordsData(require('@/assets/dict/cet6.json'));
-  const toefl = importWordsData(require('@/assets/dict/toefl.json'));
-  const gre = importWordsData(require('@/assets/dict/gre.json'));
-
-  return {
-    isCET4: (word: string) => cet4.has(word.toLowerCase()),
-    isCET6: (word: string) => cet6.has(word.toLowerCase()),
-    isToefl: (word: string) => toefl.has(word.toLowerCase()),
-    isGRE: (word: string) => gre.has(word.toLowerCase()),
-    isCET4UniquelyDownward: (word: string) =>
-      Dict.isCET4(word),
-    isCET6UniquelyDownward: (word: string) =>
-      Dict.isCET6(word) &&
-      !Dict.isCET4(word),
-    isToeflUniquelyDownward: (word: string) =>
-      Dict.isToefl(word) &&
-      !Dict.isCET4(word) &&
-      !Dict.isCET6(word),
-    isGREUniquelyDownward: (word: string) =>
-      Dict.isGRE(word) &&
-      !Dict.isCET4(word) &&
-      !Dict.isCET6(word) &&
-      !Dict.isToefl(word),
-    wordBorderColor: {
-      cet4: '#DCDFE6',
-      cet6: '#E6A23C',
-      toefl: '#67C23A',
-      gre: '#409EFF'
-    },
-    wordBackgroundColor: {
-      none: 'transparent',
-      cet4: '#DCDFE680',
-      cet6: '#E6A23C80',
-      toefl: '#67C23A80',
-      gre: '#409EFF80'
-    },
-    getWordScore(word: string) {
-      if (Dict.isCET4(word)) {
-        return 1;
-      }
-      if (Dict.isCET6(word)) {
-        return 9;
-      }
-      if (Dict.isToefl(word)) {
-        return 25;
-      }
-      if (Dict.isGRE(word)) {
-        return 49;
-      }
-      return 0;
-    },
-    getWordBackgroundColor(word: string) {
-      word = word.toLowerCase();
-      if (Dict.isCET4(word)) {
-        return Dict.wordBackgroundColor.cet4;
-      }
-      if (Dict.isCET6(word)) {
-        return Dict.wordBackgroundColor.cet6;
-      }
-      if (Dict.isToefl(word)) {
-        return Dict.wordBackgroundColor.toefl;
-      }
-      if (Dict.isGRE(word)) {
-        return Dict.wordBackgroundColor.gre;
-      }
-      return Dict.wordBackgroundColor.none;
-    }
-  };
-})();
 
 /**
  * 处理翻译的辅助对象
@@ -313,4 +194,4 @@ export const Text = (() => {
   };
 })();
 
-export default { Logger, Dict, Punctuation, Translation, Text };
+export default { Punctuation, Translation, Text };
