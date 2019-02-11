@@ -205,6 +205,10 @@
 </template>
 
 <script lang="ts">
+/**
+ * 2019-2-11 23:54:47
+ * TODO: 在单词上方显示释义，类似kindle的生词提示功能
+ */
 import { ipcRenderer as ipc } from 'electron';
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { StartRouter } from '@/router';
