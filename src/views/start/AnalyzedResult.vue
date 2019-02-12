@@ -208,6 +208,8 @@
 /**
  * 2019-2-11 23:54:47
  * TODO: 在单词上方显示释义，类似kindle的生词提示功能
+ * 只选取最主要的释义，但是鼠标移上后可以有悬浮菜单显示其他释义并切换
+ * 如果多个单词在同一行距离过近，则应该尽量位移避开，如果避不开就截断内容
  */
 import { ipcRenderer as ipc } from 'electron';
 import { Component, Vue, Watch } from 'vue-property-decorator';
