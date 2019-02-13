@@ -210,6 +210,8 @@
  * TODO: 在单词上方显示释义，类似kindle的生词提示功能
  * 只选取最主要的释义，但是鼠标移上后可以有悬浮菜单显示其他释义并切换
  * 如果多个单词在同一行距离过近，则应该尽量位移避开，如果避不开就截断内容
+ * 2019-2-13 23:55:00
+ * TODO: 解决渲染时过卡的问题，可以引入分页渲染，或者惰性渲染，前者实现更加简单。
  */
 import { ipcRenderer as ipc } from 'electron';
 import { Component, Vue, Watch } from 'vue-property-decorator';
