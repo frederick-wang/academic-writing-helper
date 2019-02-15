@@ -3,7 +3,7 @@
 
 ## 源码使用
 
-运行 npm run electron:serve 启动，运行 npm run electron:build 打包。
+首先运行 npm install 安装依赖，依赖安装完成后，运行 npm run electron:serve 启动程序。如果需要打包为 exe 可执行文件，运行 npm run electron:build 打包。
 
 ## 快速上手
 

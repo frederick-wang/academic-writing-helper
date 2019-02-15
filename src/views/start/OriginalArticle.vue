@@ -44,7 +44,7 @@
 <script lang="ts">
 /**
  * 2019-2-14 23:57:41
- * TODOS: 内容源的获取可以来自网络内容，提高便利性，像扇贝新闻那样。
+ * TODO: 内容源的获取可以来自网络内容，提高便利性，像扇贝新闻那样。
  */
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { StartRouter } from '@/router';
