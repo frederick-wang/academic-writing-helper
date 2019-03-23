@@ -12,6 +12,10 @@
 </template>
 
 <script lang="ts">
+/**
+ * 将作为Semianr（二）课程内容继续开发
+ */
+
 import { Component, Vue } from 'vue-property-decorator';
 
 import Nav from '@/components/Nav.vue';
