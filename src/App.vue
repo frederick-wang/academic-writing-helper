@@ -14,6 +14,9 @@
 <script lang="ts">
 /**
  * 将作为Semianr（二）课程内容继续开发
+ * 首先需要完成分页，否则现在大文档输出时太慢了
+ * 然后需要完成新闻源的聚合
+ * 设置也需要做成可以保存的，而不是现在的每次重新调整
  */
 
 import { Component, Vue } from 'vue-property-decorator';
