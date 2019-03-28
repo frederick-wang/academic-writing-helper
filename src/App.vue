@@ -18,6 +18,7 @@
  * 然后需要完成新闻源的聚合
  * 设置也需要做成可以保存的，而不是现在的每次重新调整
  * 还需要有全文翻译的功能或者分段翻译的功能，如果能导入Word就更好了
+ * 输出的如果只是txt也太单调了，需要也可以输出word
  */
 
 import { Component, Vue } from 'vue-property-decorator';
