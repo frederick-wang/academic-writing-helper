@@ -4,7 +4,7 @@ module.exports = {
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
-        productName: 'Academic Writing Helper',
+        productName: 'English Reading Assistant',
         icon: './public/icon.png'
       }
     }

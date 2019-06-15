@@ -441,7 +441,7 @@ export default class AnalyzedResult extends Vue {
   }
   private exportImportantSentences() {
     const header =
-      `本文件由【Academic Writing Helper ${
+      `本文件由【English Reading Assistant ${
         this.version
       }】于 ${new Date().toLocaleString()} 导出\r\n` +
       `Copyright (C) ${new Date().getFullYear()} Frederick Wang\r\n` +
