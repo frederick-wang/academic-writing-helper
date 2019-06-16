@@ -412,11 +412,11 @@ export default class AnalyzedResult extends Vue {
     // const f = (v: number) => Math.log(v) ** 2 / v;
     // const getLengthScore = f;
 
-    // The current algorithm: normal distribution, which μ equals 17.5 and 2 * σ equals (17.5 - 7).
+    // The current algorithm: normal distribution, which μ equals 20 and σ equals 6.25.
     const normpdf = (v: number, mu: number, sigma: number) =>
       (1 / (sigma * Math.sqrt(2 * Math.PI))) *
       Math.E ** -((v - mu) ** 2 / (2 * sigma ** 2));
-    const getLengthScore = (v: number) => normpdf(v, 17.5, (17.5 - 7) / 2);
+    const getLengthScore = (v: number) => normpdf(v, 20, 6.25);
 
     const getWordsScore = (words: string[]) =>
       words
