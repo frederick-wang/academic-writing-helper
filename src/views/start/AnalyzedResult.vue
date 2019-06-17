@@ -103,9 +103,19 @@
             >
               <span>{{sentenceIndex + 1}}. </span>
               <span
+                class="related-sentence-word"
+                v-for="(word, wordIndex) in sentenceItem.revlevance.before"
+                :key="sentenceIndex+''+wordIndex+word+Math.random()"
+              >{{word}} </span>
+              <span
                 v-for="(word, wordIndex) in sentenceItem.sentence"
-                :key="wordIndex"
+                :key="sentenceIndex+''+wordIndex+word+Math.random()"
                 :style="getWordStyle(word)"
+              >{{word}} </span>
+              <span
+                class="related-sentence-word"
+                v-for="(word, wordIndex) in sentenceItem.revlevance.after"
+                :key="sentenceIndex+''+wordIndex+word+Math.random()"
               >{{word}} </span>
             </div>
             <div class="words">
@@ -221,7 +231,7 @@ import Logger from '@/utils/Logger';
 import Translation from '@/utils/Translation';
 import Punctuation from '@/utils/Punctuation';
 import Text from '@/utils/Text';
-import { SentenceItem, WordItem } from '@/interface';
+import { SentenceItem, WordItem, SentenceItemWithRelevance } from '@/interface';
 import { mapLimit } from 'async';
 
 @Component
@@ -267,7 +277,7 @@ export default class AnalyzedResult extends Vue {
     return allScores[Math.floor(allScores.length * 0.2)] || 0;
   }
 
-  get analyzedResult() {
+  get analyzedResult(): SentenceItem[][] {
     Logger.time('analyzedResult');
     if (!this.originalText) {
       Logger.timeEnd('analyzedResult');
@@ -386,17 +396,38 @@ export default class AnalyzedResult extends Vue {
   /**
    * Get all sentences whose score is above the standard.
    */
-  get importantSentences(): SentenceItem[] {
+  get importantSentences() {
     return this.analyzedResult.reduce(
       (accPara, curPara) => [
         ...accPara,
         ...curPara.reduce(
-          (acc, cur) =>
-            cur.score >= this.importanceStandard ? [...acc, cur] : acc,
-          [] as SentenceItem[]
+          (acc, cur, i, src) =>
+            cur.score >= this.importanceStandard
+              ? [
+                  ...acc,
+                  {
+                    ...cur,
+                    revlevance: {
+                      before: [src[i - 2], src[i - 1]]
+                        .filter(v => v)
+                        .map(v => v.sentence)
+                        // 只保留一句前文
+                        .slice(0, 1)
+                        .flat(),
+                      after: [src[i + 1], src[i + 2]]
+                        .filter(v => v)
+                        .map(v => v.sentence)
+                        // 只保留一句后文
+                        .slice(0, 1)
+                        .flat()
+                    }
+                  }
+                ]
+              : acc,
+          [] as SentenceItemWithRelevance[]
         )
       ],
-      [] as SentenceItem[]
+      []
     );
   }
 
@@ -519,6 +550,11 @@ export default class AnalyzedResult extends Vue {
       .sentence {
         border-left: 2.5px solid #f56c6c;
         padding-left: 0.5em;
+
+        .related-sentence-word {
+          opacity: 0.5;
+          font-size: 0.8em;
+        }
       }
       .words {
         font-size: 0.8em;

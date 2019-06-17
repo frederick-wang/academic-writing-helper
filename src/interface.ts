@@ -8,3 +8,10 @@ export interface WordItem {
   translation: string[];
   addition: string;
 }
+
+export interface SentenceItemWithRelevance extends SentenceItem {
+  revlevance: {
+    before: string[];
+    after: string[];
+  };
+}
