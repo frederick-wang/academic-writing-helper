@@ -37,7 +37,7 @@
             <div
               class="sentence"
               :class="{
-                'sentence-important': sentenceItem.score >= importanceStandard,
+                'sentence-important': sentenceItem.score >= importanceStandard
               }"
               v-for="(sentenceItem, sentenceIndex) in para"
               :key="sentenceIndex"
@@ -252,7 +252,7 @@ export default class AnalyzedResult extends Vue {
       .reduce(
         (accPara, curPara) => [
           ...accPara,
-          ...curPara.reduce((acc, cur) => [...acc, cur.score], [] as number[]),
+          ...curPara.reduce((acc, cur) => [...acc, cur.score], [] as number[])
         ],
         [] as number[]
       )
@@ -291,7 +291,7 @@ export default class AnalyzedResult extends Vue {
           const score = this.getSentenceScore(convertedSentence)
           return {
             score,
-            sentence: convertedSentence,
+            sentence: convertedSentence
           }
         })
     const result = paragraphs.map(splitParagraphToSentences)
@@ -326,14 +326,14 @@ export default class AnalyzedResult extends Vue {
                       ? acc
                       : [...acc, cur],
                   [] as string[]
-                ),
+                )
               ],
               [] as string[]
-            ),
+            )
           ],
           [] as string[]
         )
-      ),
+      )
     ]
   }
 
@@ -342,7 +342,7 @@ export default class AnalyzedResult extends Vue {
    */
   private getImportantSentenceTranslations() {
     this.importantWordsOfSentences = Array.from({
-      length: this.importantSentences.length,
+      length: this.importantSentences.length
     }).map(() => [])
     const { cet4, cet6, toefl, gre } = this.settings.wordWise
     setTimeout(() => {
@@ -355,7 +355,7 @@ export default class AnalyzedResult extends Vue {
               (toefl && Dict.isToeflUniquelyDownward(word)) ||
               (gre && Dict.isGREUniquelyDownward(word))
           ),
-          index,
+          index
         })),
         5,
         ({ words, index }, callback) => {
@@ -403,13 +403,13 @@ export default class AnalyzedResult extends Vue {
                         .map((v) => v.sentence)
                         // 只保留一句后文
                         .slice(0, 1)
-                        .flat(),
-                    },
-                  },
+                        .flat()
+                    }
+                  }
                 ]
               : acc,
           [] as SentenceItemWithRelevance[]
-        ),
+        )
       ],
       []
     )
@@ -446,11 +446,11 @@ export default class AnalyzedResult extends Vue {
   private getWordStyle(word: string) {
     if (Text.isSeparator(word)) {
       return {
-        padding: '0',
+        padding: '0'
       }
     }
     const getStyle = (w: string) => ({
-      backgroundColor: Dict.getWordBackgroundColor(w),
+      backgroundColor: Dict.getWordBackgroundColor(w)
     })
     return getStyle(word)
   }
@@ -489,7 +489,7 @@ export default class AnalyzedResult extends Vue {
           if (path) {
             this.$message({
               message: `文件已保存至：${path}`,
-              type: 'success',
+              type: 'success'
             })
           } else {
             this.$message('没有选择保存文件的位置')
