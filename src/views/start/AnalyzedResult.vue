@@ -1,40 +1,34 @@
 <template>
   <div class="subpage subpage-analyzed-result">
-    <el-tabs
-      v-model="tabName"
-      type="card"
-    >
-      <el-tab-pane
-        label="原文"
-        name="article"
-        class="tab-article"
-      >
+    <el-tabs v-model="tabName" type="card">
+      <el-tab-pane label="原文" name="article" class="tab-article">
         <div class="word-class-indicators">
           <el-tag
             class="word-class-tag"
             :color="wordBackgroundColor.cet4"
             :disable-transitions="true"
-          >四级词汇</el-tag>
+            >四级词汇</el-tag
+          >
           <el-tag
             class="word-class-tag"
             :color="wordBackgroundColor.cet6"
             :disable-transitions="true"
-          >六级词汇</el-tag>
+            >六级词汇</el-tag
+          >
           <el-tag
             class="word-class-tag"
             :color="wordBackgroundColor.toefl"
             :disable-transitions="true"
-          >托福词汇</el-tag>
+            >托福词汇</el-tag
+          >
           <el-tag
             class="word-class-tag"
             :color="wordBackgroundColor.gre"
             :disable-transitions="true"
-          >GRE词汇</el-tag>
+            >GRE词汇</el-tag
+          >
         </div>
-        <div
-          class="typo"
-          style="font-weight: bolder;"
-        >
+        <div class="typo" style="font-weight: bolder;">
           <div
             is="p"
             v-for="(para, paraIndex) in analyzedResult"
@@ -42,7 +36,9 @@
           >
             <div
               class="sentence"
-              :class="{ 'sentence-important': sentenceItem.score >= importanceStandard }"
+              :class="{
+                'sentence-important': sentenceItem.score >= importanceStandard,
+              }"
               v-for="(sentenceItem, sentenceIndex) in para"
               :key="sentenceIndex"
             >
@@ -50,91 +46,89 @@
                 v-for="(word, wordIndex) in sentenceItem.sentence"
                 :key="wordIndex"
                 :style="getWordStyle(word)"
-              >{{word}} </span>
+                >{{ word }}
+              </span>
             </div>
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane
-        label="重点句"
-        name="sentence"
-        class="tab-sentence"
-      >
+      <el-tab-pane label="重点句" name="sentence" class="tab-sentence">
         <div class="word-class-indicators">
           <el-tag
             class="word-class-tag"
             :color="wordBackgroundColor.cet4"
             :disable-transitions="true"
-          >四级词汇</el-tag>
+            >四级词汇</el-tag
+          >
           <el-tag
             class="word-class-tag"
             :color="wordBackgroundColor.cet6"
             :disable-transitions="true"
-          >六级词汇</el-tag>
+            >六级词汇</el-tag
+          >
           <el-tag
             class="word-class-tag"
             :color="wordBackgroundColor.toefl"
             :disable-transitions="true"
-          >托福词汇</el-tag>
+            >托福词汇</el-tag
+          >
           <el-tag
             class="word-class-tag"
             :color="wordBackgroundColor.gre"
             :disable-transitions="true"
-          >GRE词汇</el-tag>
+            >GRE词汇</el-tag
+          >
           <el-button
             type="primary"
             size="small"
             @click="exportImportantSentences"
             style="float: right;"
-          >导出为 TXT 格式文本文档</el-button>
+            >导出为 TXT 格式文本文档</el-button
+          >
         </div>
-        <div
-          class="typo"
-          style="font-weight: bolder;"
-        >
+        <div class="typo" style="font-weight: bolder;">
           <div
             class="sentence-item"
             v-for="(sentenceItem, sentenceIndex) in importantSentences"
             :key="sentenceIndex"
           >
-            <div
-              is="p"
-              class="sentence no-indent"
-            >
-              <span>{{sentenceIndex + 1}}. </span>
+            <div is="p" class="sentence no-indent">
+              <span>{{ sentenceIndex + 1 }}. </span>
               <span
                 class="related-sentence-word"
                 v-for="(word, wordIndex) in sentenceItem.revlevance.before"
-                :key="sentenceIndex+''+wordIndex+word+Math.random()"
-              >{{word}} </span>
+                :key="sentenceIndex + '' + wordIndex + word + Math.random()"
+                >{{ word }}
+              </span>
               <span
                 v-for="(word, wordIndex) in sentenceItem.sentence"
-                :key="sentenceIndex+''+wordIndex+word+Math.random()"
+                :key="sentenceIndex + '' + wordIndex + word + Math.random()"
                 :style="getWordStyle(word)"
-              >{{word}} </span>
+                >{{ word }}
+              </span>
               <span
                 class="related-sentence-word"
                 v-for="(word, wordIndex) in sentenceItem.revlevance.after"
-                :key="sentenceIndex+''+wordIndex+word+Math.random()"
-              >{{word}} </span>
+                :key="sentenceIndex + '' + wordIndex + word + Math.random()"
+                >{{ word }}
+              </span>
             </div>
             <div class="words">
               <p
                 class="no-indent"
-                v-for="(word, wordIndex) in importantWordsOfSentences[sentenceIndex]"
+                v-for="(word, wordIndex) in importantWordsOfSentences[
+                  sentenceIndex
+                ]"
                 :key="wordIndex"
               >
-                <strong>{{word.word}}</strong>: {{word.translation.join('、')}}
+                <strong>{{ word.word }}</strong
+                >: {{ word.translation.join('、') }}
               </p>
             </div>
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane
-        label="四级词汇"
-        name="cet4"
-        class="tab-cet4"
-      >
+      <el-tab-pane label="四级词汇" name="cet4" class="tab-cet4">
         <div class="words-container">
           <div
             class="word"
@@ -145,16 +139,13 @@
             <span
               class="word-number"
               :style="{ 'border-right-color': wordBorderColor.cet4 }"
-            >{{index + 1}}</span>
-            <span class="word-title">{{item}}</span>
+              >{{ index + 1 }}</span
+            >
+            <span class="word-title">{{ item }}</span>
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane
-        label="六级词汇"
-        name="cet6"
-        class="tab-cet6"
-      >
+      <el-tab-pane label="六级词汇" name="cet6" class="tab-cet6">
         <div class="words-container">
           <div
             class="word"
@@ -165,16 +156,13 @@
             <span
               class="word-number"
               :style="{ 'border-right-color': wordBorderColor.cet6 }"
-            >{{index + 1}}</span>
-            <span class="word-title">{{item}}</span>
+              >{{ index + 1 }}</span
+            >
+            <span class="word-title">{{ item }}</span>
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane
-        label="托福词汇"
-        name="toefl"
-        class="tab-toefl"
-      >
+      <el-tab-pane label="托福词汇" name="toefl" class="tab-toefl">
         <div class="words-container">
           <div
             class="word"
@@ -185,16 +173,13 @@
             <span
               class="word-number"
               :style="{ 'border-right-color': wordBorderColor.toefl }"
-            >{{index + 1}}</span>
-            <span class="word-title">{{item}}</span>
+              >{{ index + 1 }}</span
+            >
+            <span class="word-title">{{ item }}</span>
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane
-        label="GRE词汇"
-        name="gre"
-        class="tab-gre"
-      >
+      <el-tab-pane label="GRE词汇" name="gre" class="tab-gre">
         <div class="words-container">
           <div
             class="word"
@@ -205,8 +190,9 @@
             <span
               class="word-number"
               :style="{ 'border-right-color': wordBorderColor.gre }"
-            >{{index + 1}}</span>
-            <span class="word-title">{{item}}</span>
+              >{{ index + 1 }}</span
+            >
+            <span class="word-title">{{ item }}</span>
           </div>
         </div>
       </el-tab-pane>
@@ -223,40 +209,39 @@
  * 2019-2-13 23:55:00
  * TODO: 解决渲染时过卡的问题，可以引入分页渲染，或者惰性渲染，前者实现更加简单。
  */
-import { ipcRenderer as ipc } from 'electron';
-import { Component, Vue, Watch } from 'vue-property-decorator';
-import { StartRouter } from '@/router';
-import Dict from '@/utils/Dict';
-import Logger from '@/utils/Logger';
-import Translation from '@/utils/Translation';
-import Punctuation from '@/utils/Punctuation';
-import Text from '@/utils/Text';
-import { SentenceItem, WordItem, SentenceItemWithRelevance } from '@/interface';
-import { mapLimit } from 'async';
+import { ipcRenderer as ipc } from 'electron'
+import { Component, Vue } from 'vue-property-decorator'
+import Dict from '@/utils/Dict'
+import Logger from '@/utils/Logger'
+import Translation from '@/utils/Translation'
+import Punctuation from '@/utils/Punctuation'
+import Text from '@/utils/Text'
+import { SentenceItem, WordItem, SentenceItemWithRelevance } from '@/interface'
+import { mapLimit } from 'async'
 
 @Component
 export default class AnalyzedResult extends Vue {
-  private tabName = 'article';
-  private importantWordsOfSentences: WordItem[][] = [];
+  private tabName = 'article'
+  private importantWordsOfSentences: WordItem[][] = []
 
   get settings() {
-    return this.$store.state.settings;
+    return this.$store.state.settings
   }
 
   get version() {
-    return process.env.VUE_APP_VERSION;
+    return process.env.VUE_APP_VERSION
   }
 
   get originalText(): string {
-    return this.$store.state.originalText;
+    return this.$store.state.originalText
   }
 
   get wordBorderColor() {
-    return Dict.wordBorderColor;
+    return Dict.wordBorderColor
   }
 
   get wordBackgroundColor() {
-    return Dict.wordBackgroundColor;
+    return Dict.wordBackgroundColor
   }
 
   get importanceStandard() {
@@ -267,27 +252,26 @@ export default class AnalyzedResult extends Vue {
       .reduce(
         (accPara, curPara) => [
           ...accPara,
-          ...curPara.reduce((acc, cur) => [...acc, cur.score], [] as number[])
+          ...curPara.reduce((acc, cur) => [...acc, cur.score], [] as number[]),
         ],
         [] as number[]
       )
-      .sort((a, b) => b - a);
+      .sort((a, b) => b - a)
     // Take the score of 20% as the standard of important sentences.
     // If there is no sentence at present, return 0.
-    return allScores[Math.floor(allScores.length * 0.2)] || 0;
+    return allScores[Math.floor(allScores.length * 0.2)] || 0
   }
 
   get analyzedResult(): SentenceItem[][] {
-    Logger.time('analyzedResult');
+    Logger.time('analyzedResult')
     if (!this.originalText) {
-      Logger.timeEnd('analyzedResult');
-      return [];
+      Logger.timeEnd('analyzedResult')
+      return []
     }
 
-    const splitParagraph = (str: string) => Text.split(str, '\n');
+    const splitParagraph = (str: string) => Text.split(str, '\n')
 
-    const splitSentence = (str: string) =>
-      Text.split(str, Text.separatorRegExp);
+    const splitSentence = (str: string) => Text.split(str, Text.separatorRegExp)
 
     /**
      * Text preprocessing.
@@ -295,37 +279,37 @@ export default class AnalyzedResult extends Vue {
      * @returns Processed text separated by paragraph, as a string[].
      */
     const preProcessText = (text: string) =>
-      splitParagraph(Text.tidyCRLF(Punctuation.normalizeText(text)));
+      splitParagraph(Text.tidyCRLF(Punctuation.normalizeText(text)))
 
-    const paragraphs = preProcessText(this.originalText);
+    const paragraphs = preProcessText(this.originalText)
 
     const splitParagraphToSentences = (text: string) =>
       (text.match(Punctuation.sentencePunctuationRegExpG) || [])
-        .map(v => v.trim())
-        .map(sentence => {
-          const convertedSentence = splitSentence(sentence);
-          const score = this.getSentenceScore(convertedSentence);
+        .map((v) => v.trim())
+        .map((sentence) => {
+          const convertedSentence = splitSentence(sentence)
+          const score = this.getSentenceScore(convertedSentence)
           return {
             score,
-            sentence: convertedSentence
-          };
-        });
-    const result = paragraphs.map(splitParagraphToSentences);
-    Logger.timeEnd('analyzedResult');
-    return result;
+            sentence: convertedSentence,
+          }
+        })
+    const result = paragraphs.map(splitParagraphToSentences)
+    Logger.timeEnd('analyzedResult')
+    return result
   }
 
   get greWords() {
-    return this.allWords.filter(v => Dict.isGRE(v));
+    return this.allWords.filter((v) => Dict.isGRE(v))
   }
   get toeflWords() {
-    return this.allWords.filter(v => Dict.isToefl(v));
+    return this.allWords.filter((v) => Dict.isToefl(v))
   }
   get cet6Words() {
-    return this.allWords.filter(v => Dict.isCET6(v));
+    return this.allWords.filter((v) => Dict.isCET6(v))
   }
   get cet4Words() {
-    return this.allWords.filter(v => Dict.isCET4(v));
+    return this.allWords.filter((v) => Dict.isCET4(v))
   }
   get allWords() {
     return [
@@ -342,15 +326,15 @@ export default class AnalyzedResult extends Vue {
                       ? acc
                       : [...acc, cur],
                   [] as string[]
-                )
+                ),
               ],
               [] as string[]
-            )
+            ),
           ],
           [] as string[]
         )
-      )
-    ];
+      ),
+    ]
   }
 
   /**
@@ -358,39 +342,39 @@ export default class AnalyzedResult extends Vue {
    */
   private getImportantSentenceTranslations() {
     this.importantWordsOfSentences = Array.from({
-      length: this.importantSentences.length
-    }).map(v => []);
-    const { cet4, cet6, toefl, gre } = this.settings.wordWise;
+      length: this.importantSentences.length,
+    }).map(() => [])
+    const { cet4, cet6, toefl, gre } = this.settings.wordWise
     setTimeout(() => {
       mapLimit(
         this.importantSentences.map(({ sentence }, index) => ({
           words: [...new Set(sentence)].filter(
-            word =>
+            (word) =>
               (cet4 && Dict.isCET4UniquelyDownward(word)) ||
               (cet6 && Dict.isCET6UniquelyDownward(word)) ||
               (toefl && Dict.isToeflUniquelyDownward(word)) ||
               (gre && Dict.isGREUniquelyDownward(word))
           ),
-          index
+          index,
         })),
         5,
         ({ words, index }, callback) => {
           Translation.getWordCollectionTranslation(words, 10)
-            .then(data => {
-              this.importantWordsOfSentences[index].splice(0, 0, ...data);
-              callback(null, data);
+            .then((data) => {
+              this.importantWordsOfSentences[index].splice(0, 0, ...data)
+              callback(null, data)
             })
-            .catch(err => callback(err));
+            .catch((err) => callback(err))
         },
-        (err, results) => {
+        (err) => {
           if (err) {
-            Logger.error(err);
-            return;
+            Logger.error(err)
+            return
           }
-          Translation.saveWordsTranslation();
+          Translation.saveWordsTranslation()
         }
-      );
-    }, 1000);
+      )
+    }, 1000)
   }
 
   /**
@@ -409,30 +393,30 @@ export default class AnalyzedResult extends Vue {
                     ...cur,
                     revlevance: {
                       before: [src[i - 2], src[i - 1]]
-                        .filter(v => v)
-                        .map(v => v.sentence)
+                        .filter((v) => v)
+                        .map((v) => v.sentence)
                         // 只保留一句前文
                         .slice(0, 1)
                         .flat(),
                       after: [src[i + 1], src[i + 2]]
-                        .filter(v => v)
-                        .map(v => v.sentence)
+                        .filter((v) => v)
+                        .map((v) => v.sentence)
                         // 只保留一句后文
                         .slice(0, 1)
-                        .flat()
-                    }
-                  }
+                        .flat(),
+                    },
+                  },
                 ]
               : acc,
           [] as SentenceItemWithRelevance[]
-        )
+        ),
       ],
       []
-    );
+    )
   }
 
   private getSentenceScore(convertedSentence: string[]) {
-    const sentenceWords = convertedSentence.filter(v => !Text.isSeparator(v));
+    const sentenceWords = convertedSentence.filter((v) => !Text.isSeparator(v))
 
     /**
      * 2019-1-8 04:35:48
@@ -446,29 +430,29 @@ export default class AnalyzedResult extends Vue {
     // The current algorithm: normal distribution, which μ equals 20 and σ equals 6.25.
     const normpdf = (v: number, mu: number, sigma: number) =>
       (1 / (sigma * Math.sqrt(2 * Math.PI))) *
-      Math.E ** -((v - mu) ** 2 / (2 * sigma ** 2));
-    const getLengthScore = (v: number) => normpdf(v, 20, 6.25);
+      Math.E ** -((v - mu) ** 2 / (2 * sigma ** 2))
+    const getLengthScore = (v: number) => normpdf(v, 20, 6.25)
 
     const getWordsScore = (words: string[]) =>
       words
-        .map(word => word.toLowerCase())
-        .reduce((acc, cur) => acc + Dict.getWordScore(cur), 0);
+        .map((word) => word.toLowerCase())
+        .reduce((acc, cur) => acc + Dict.getWordScore(cur), 0)
 
     const getTotalScore = (words: string[]) => (length: number) =>
-      getWordsScore(words) * getLengthScore(length);
+      getWordsScore(words) * getLengthScore(length)
 
-    return getTotalScore(sentenceWords)(sentenceWords.length);
+    return getTotalScore(sentenceWords)(sentenceWords.length)
   }
   private getWordStyle(word: string) {
     if (Text.isSeparator(word)) {
       return {
-        padding: '0'
-      };
+        padding: '0',
+      }
     }
     const getStyle = (w: string) => ({
-      backgroundColor: Dict.getWordBackgroundColor(w)
-    });
-    return getStyle(word);
+      backgroundColor: Dict.getWordBackgroundColor(w),
+    })
+    return getStyle(word)
   }
   private exportImportantSentences() {
     const header =
@@ -476,7 +460,7 @@ export default class AnalyzedResult extends Vue {
         this.version
       }】于 ${new Date().toLocaleString()} 导出\r\n` +
       `Copyright (C) ${new Date().getFullYear()} Frederick Wang\r\n` +
-      '----------------------------------------\r\n\r\n';
+      '----------------------------------------\r\n\r\n'
     const convertSentenceWords = (item: WordItem[]) =>
       item.reduce(
         (acc, cur, i, arr) =>
@@ -484,7 +468,7 @@ export default class AnalyzedResult extends Vue {
           `\t${cur.word}: ${cur.translation.join('、')}` +
           (arr.length - i - 1 ? '\r\n' : ''),
         item.length ? '\r\n' : ''
-      );
+      )
     const content = this.importantSentences.reduce(
       (acc, cur, i, arr) =>
         acc +
@@ -492,32 +476,32 @@ export default class AnalyzedResult extends Vue {
         convertSentenceWords(this.importantWordsOfSentences[i]) +
         (arr.length - i - 1 ? '\r\n\r\n' : '\r\n'),
       ''
-    );
-    this.exportFileTxt(header + content);
+    )
+    this.exportFileTxt(header + content)
   }
   private exportFileTxt(data: string) {
     ipc.once(
       'saved-file-txt',
-      (event: any, { error, path }: { error: Error; path: string }) => {
+      (event: unknown, { error, path }: { error: Error; path: string }) => {
         if (error) {
-          this.$message.error(error.message);
+          this.$message.error(error.message)
         } else {
           if (path) {
             this.$message({
               message: `文件已保存至：${path}`,
-              type: 'success'
-            });
+              type: 'success',
+            })
           } else {
-            this.$message('没有选择保存文件的位置');
+            this.$message('没有选择保存文件的位置')
           }
         }
       }
-    );
-    ipc.send('save-dialog-txt', data);
+    )
+    ipc.send('save-dialog-txt', data)
   }
 
   private created() {
-    this.getImportantSentenceTranslations();
+    this.getImportantSentenceTranslations()
   }
 }
 </script>

@@ -5,14 +5,12 @@
  * @class Text
  */
 export default class Text {
-  private static regExpPattern =
-    // tslint:disable-next-line max-line-length
-    `(\\s+|:|,|"|~|\`|(?:--|-)|\\\\|\\\/|<|>|\\\{|\\\}|\\\[|\\\]|\\\+|\\\*|_|\\\(|\\\)|&|\\\^|%|\\\$|#|@|\\\||’|;|(?:\\\.{3}|\\\.)|\\\?|!|…)`;
-  public static separatorRegExp = new RegExp(Text.regExpPattern);
-  public static separatorRegExpG = new RegExp(Text.regExpPattern, 'g');
+  private static regExpPattern = `(\\s+|:|,|"|~|\`|(?:--|-)|\\\\|\\/|<|>|\\{|\\}|\\[|\\]|\\+|\\*|_|\\(|\\)|&|\\^|%|\\$|#|@|\\||’|;|(?:\\.{3}|\\.)|\\?|!|…)`
+  public static separatorRegExp = new RegExp(Text.regExpPattern)
+  public static separatorRegExpG = new RegExp(Text.regExpPattern, 'g')
 
   public static isSeparator(word: string) {
-    return !!word.match(Text.separatorRegExp);
+    return !!word.match(Text.separatorRegExp)
   }
 
   public static tidyCRLF(str: string) {
@@ -20,14 +18,14 @@ export default class Text {
       .replace(/\r/g, '\n')
       .replace(/\n\s+\n/g, '\n\n')
       .replace(/\n{2,}/g, '\n')
-      .replace(/^\n/, '');
+      .replace(/^\n/, '')
   }
 
   public static split(str: string, separator: string | RegExp) {
     return str
       .trim()
       .split(separator)
-      .map(v => v.trim())
-      .filter(v => v);
+      .map((v) => v.trim())
+      .filter((v) => v)
   }
 }
