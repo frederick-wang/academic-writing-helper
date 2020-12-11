@@ -244,7 +244,7 @@ export default class AnalyzedResult extends Vue {
     return Dict.wordBackgroundColor
   }
 
-  get importanceStandard() {
+  get importanceStandard(): number {
     /**
      * Temporarily store the scores of all sentences， in order from largest to smallest.
      */
@@ -299,19 +299,19 @@ export default class AnalyzedResult extends Vue {
     return result
   }
 
-  get greWords() {
+  get greWords(): string[] {
     return this.allWords.filter((v) => Dict.isGRE(v))
   }
-  get toeflWords() {
+  get toeflWords(): string[] {
     return this.allWords.filter((v) => Dict.isToefl(v))
   }
-  get cet6Words() {
+  get cet6Words(): string[] {
     return this.allWords.filter((v) => Dict.isCET6(v))
   }
-  get cet4Words() {
+  get cet4Words(): string[] {
     return this.allWords.filter((v) => Dict.isCET4(v))
   }
-  get allWords() {
+  get allWords(): string[] {
     return [
       ...new Set(
         this.analyzedResult.reduce(
@@ -380,7 +380,7 @@ export default class AnalyzedResult extends Vue {
   /**
    * Get all sentences whose score is above the standard.
    */
-  get importantSentences() {
+  get importantSentences(): SentenceItem[] {
     return this.analyzedResult.reduce(
       (accPara, curPara) => [
         ...accPara,

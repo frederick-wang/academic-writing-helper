@@ -1,19 +1,17 @@
 <template>
   <div class="subpage subpage-original-article">
     <div class="action-bar">
-      <el-button
-        type="primary"
-        size="small"
-        @click="analyzeText"
-      >开始分析</el-button>
-      <el-button
-        type="danger"
-        size="small"
-        @click="clearText"
-      >清空文本</el-button>
+      <el-button type="primary" size="small" @click="analyzeText"
+        >开始分析</el-button
+      >
+      <el-button type="danger" size="small" @click="clearText"
+        >清空文本</el-button
+      >
     </div>
     <div class="import-external-file">
-      <p class="tip">您可以导入一个文本文件，或者直接在下面的文本框中输入需要分析的文章</p>
+      <p class="tip">
+        您可以导入一个文本文件，或者直接在下面的文本框中输入需要分析的文章
+      </p>
       <el-upload
         ref="uploadDocument"
         class="upload-document"
@@ -25,15 +23,12 @@
       >
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或<em>点击导入</em></div>
-        <div
-          class="el-upload__tip"
-          slot="tip"
-        >注意，只能导入文本文件</div>
+        <div class="el-upload__tip" slot="tip">注意，只能导入文本文件</div>
       </el-upload>
     </div>
     <el-input
       type="textarea"
-      :autosize="{ minRows: 3}"
+      :autosize="{ minRows: 3 }"
       placeholder="如果不想导入文件，也可以直接在这里输入需要分析的文章"
       v-model="originalText"
     >
@@ -47,31 +42,31 @@
  * TODO: 内容源的获取可以来自网络内容，提高便利性，像扇贝新闻那样。
  * 把这个作为这学期seminar的一部分
  */
-import { Component, Vue, Watch } from 'vue-property-decorator';
-import { StartRouter } from '@/router';
-import Logger from '@/utils/Logger';
-import Dict from '@/utils/Dict';
-import Punctuation from '@/utils/Punctuation';
-import { NavigationGuard, Route } from 'vue-router/types/router';
+import { Component, Vue, Watch } from 'vue-property-decorator'
+import { StartRouter } from '@/router'
+import Logger from '@/utils/Logger'
+import Dict from '@/utils/Dict'
+import Punctuation from '@/utils/Punctuation'
+import { NavigationGuard, Route } from 'vue-router/types/router'
 
 @Component({
   beforeRouteEnter(to, from, next) {
-    next(vm => (vm as OriginalArticle).clearText());
+    next((vm) => (vm as OriginalArticle).clearText())
   }
 })
 export default class OriginalArticle extends Vue {
-  private originalText = '';
+  private originalText = ''
 
   @Watch('originalText')
   private originalTextWatcher() {
-    this.$store.commit('setOriginalText', this.originalText);
+    this.$store.commit('setOriginalText', this.originalText)
   }
 
   private analyzeText() {
     if (this.originalText) {
-      this.$router.replace(StartRouter.ANALYZED_RESULT);
+      this.$router.replace(StartRouter.ANALYZED_RESULT)
     } else {
-      this.$message.error('抱歉，您还没有输入内容！');
+      this.$message.error('抱歉，您还没有输入内容！')
     }
   }
 
@@ -79,14 +74,14 @@ export default class OriginalArticle extends Vue {
    * Empty the textarea.
    */
   private clearText() {
-    this.originalText = '';
+    this.originalText = ''
   }
 
   /**
    * After the file contents have been read successfully, clear the list of files.
    */
   private onFileUploadSuccess(file: any, fileList: any[]) {
-    setTimeout((this.$refs.uploadDocument as any).clearFiles, 3000);
+    setTimeout((this.$refs.uploadDocument as any).clearFiles, 3000)
   }
 
   /**
@@ -96,18 +91,18 @@ export default class OriginalArticle extends Vue {
     return new Promise((resolve, reject) => {
       if (file.type === 'text/plain') {
         // eslint-disable-next-line
-        const reader = new FileReader();
+        const reader = new FileReader()
         reader.onload = () => {
-          const result = (reader.result as string) || '';
-          this.originalText = result;
-          resolve(result);
-        };
+          const result = (reader.result as string) || ''
+          this.originalText = result
+          resolve(result)
+        }
         // 以DataURL的形式读取文件:
-        reader.readAsText(file);
+        reader.readAsText(file)
       } else {
-        reject(new Error('无法导入非文本文件！'));
+        reject(new Error('无法导入非文本文件！'))
       }
-    });
+    })
   }
 }
 </script>

@@ -15,7 +15,12 @@ module.exports = {
   },
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-async-promise-executor': 'off',
+    'no-useless-escape': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
+    'no-console': 'off',
+    '@typescript-eslint/no-explicit-any': 'off'
   },
   overrides: [
     {

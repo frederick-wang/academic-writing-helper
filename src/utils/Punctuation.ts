@@ -5,14 +5,14 @@
  * @class Punctuation
  */
 export default class Punctuation {
-  private static regExpPattern = `.+?(;|(\\\.{3}|\\\.)|\\\?|!|…|$)`;
+  private static regExpPattern = `.+?(;|(\\\.{3}|\\\.)|\\\?|!|…|$)`
   public static sentencePunctuationRegExp = new RegExp(
     Punctuation.regExpPattern
-  );
+  )
   public static sentencePunctuationRegExpG = new RegExp(
     Punctuation.regExpPattern,
     'g'
-  );
+  )
   private static punctuations = new Map([
     [':', true],
     [',', true],
@@ -49,10 +49,10 @@ export default class Punctuation {
     ['|', true],
     ['...', true],
     ['…', true]
-  ]);
+  ])
 
   public static is(v: string) {
-    return Punctuation.punctuations.has(v);
+    return Punctuation.punctuations.has(v)
   }
 
   /**
@@ -71,7 +71,7 @@ export default class Punctuation {
       .replace(/【/g, '[')
       .replace(/】/g, ']')
       .replace(/（/g, '(')
-      .replace(/）/g, ')');
+      .replace(/）/g, ')')
     // 看起来好看点，虽然这两个实际上不是一个符号
     // .replace(/’/g, '\'')
   }

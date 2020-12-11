@@ -1,4 +1,4 @@
-import { remote } from 'electron';
+import { remote } from 'electron'
 
 /**
  * 提供软件运行信息的辅助类
@@ -7,6 +7,6 @@ import { remote } from 'electron';
  * @class Info
  */
 export default class Info {
-  public static isDevelopment = process.env.NODE_ENV !== 'production';
-  public static APP_PATH = remote.app.getPath('userData');
+  public static isDevelopment = process.env.NODE_ENV !== 'production'
+  public static APP_PATH = remote.app.getPath('userData')
 }

@@ -1,7 +1,7 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import Vue from 'vue'
+import Vuex from 'vuex'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
@@ -13,17 +13,16 @@ export default new Vuex.Store({
         toefl: true,
         gre: true
       }
-    }
+    },
+    key: 1
   },
   mutations: {
     setOriginalText(state, payload) {
-      state.originalText = payload;
+      state.originalText = payload
     },
     setSettingWordWise(state, payload) {
-      state.settings.wordWise = payload;
+      state.settings.wordWise = payload
     }
   },
-  actions: {
-
-  },
-});
+  actions: {}
+})
