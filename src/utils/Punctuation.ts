@@ -5,7 +5,7 @@
  * @class Punctuation
  */
 export default class Punctuation {
-  private static regExpPattern = `.+?(;|(\\\.{3}|\\\.)|\\\?|!|…|$)`
+  private static regExpPattern = `.+?(;|(\\.{3}|\\.)|\\?|!|…|$)`
   public static sentencePunctuationRegExp = new RegExp(
     Punctuation.regExpPattern
   )
@@ -51,14 +51,14 @@ export default class Punctuation {
     ['…', true]
   ])
 
-  public static is(v: string) {
+  public static is(v: string): boolean {
     return Punctuation.punctuations.has(v)
   }
 
   /**
    * 将文本中的中文标点转化为英文标点
    */
-  public static normalizeText(text: string) {
+  public static normalizeText(text: string): string {
     return text
       .replace(/“|”/g, '"')
       .replace(/‘|’/g, `'`)

@@ -7,6 +7,7 @@ import {
 } from 'vue-cli-plugin-electron-builder/lib'
 import got from 'got'
 const isDevelopment = process.env.NODE_ENV !== 'production'
+import puppeteer from 'puppeteer'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -77,6 +78,45 @@ app.on('ready', async () => {
     await installVueDevtools()
   }
   createWindow()
+
+  const browser = await puppeteer.launch({
+    executablePath:
+      './node_modules/puppeteer/.local-chromium/win64-818858/chrome-win/chrome.exe',
+    headless: false
+  })
+  const page = await browser.newPage()
+  await page.goto('https://global.chinadaily.com.cn/')
+  const result = await page.evaluate(async () => {
+    return await Promise.all(
+      Array.from(
+        (window as any).$(
+          '.content-left .tw3_01_2',
+          await fetch(
+            document.querySelector('.tit-tou a')!.getAttribute('href') || ''
+          ).then((v) => v.text())
+        )
+      )
+        .map((v) => ({
+          href: (window as any)
+            .$(v)
+            .find('.tw3_01_2_t a')
+            .attr('href')
+            .replace('//www', '//global'),
+          title: (window as any).$(v).find('.tw3_01_2_t a').text(),
+          time: (window as any).$(v).find('.tw3_01_2_t b').text(),
+          imgSrc: (window as any).$(v).find('img').attr('src')
+        }))
+        .map(async (v) => ({
+          ...v,
+          content: (window as any)
+            .$('#Content', await fetch(v.href).then((w) => w.text()))
+            .text()
+            .trim()
+        }))
+    )
+  })
+  fs.writeFileSync('test.json', JSON.stringify(result))
+  // await browser.close()
 })
 
 // Exit cleanly on request from parent process in development mode.

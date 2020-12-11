@@ -16,6 +16,7 @@ import { WordItem } from '@/interface'
  */
 export default class Translation {
   private static DICT_PATH = path.resolve(Info.APP_PATH, 'data/dict.json')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private static dict: any = {}
   private static isDictImported = false
 
@@ -35,7 +36,10 @@ export default class Translation {
     }
   }
 
-  public static getWordCollectionTranslation(words: string[], limit: number) {
+  public static getWordCollectionTranslation(
+    words: string[],
+    limit: number
+  ): Promise<WordItem[]> {
     Translation.ensureDictInitiated()
 
     return new Promise<WordItem[]>((resolve, reject) => {
@@ -57,14 +61,15 @@ export default class Translation {
     })
   }
 
-  public static getWordTranslation(word: string) {
+  public static getWordTranslation(word: string): Promise<WordItem> {
     Translation.ensureDictInitiated()
 
-    return new Promise<WordItem>(async (resolve, reject) => {
+    return new Promise<WordItem>((resolve, reject) => {
       if (Translation.dict[word]) {
         resolve(Object.assign({ word }, Translation.dict[word]))
       } else {
         const url = `http://www.youdao.com/w/eng/${word}`
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ipc.once(`request-result-${url}`, (event: any, res: any) => {
           const $ = cheerio.load(res.body)
           const translation = $('#phrsListTab .trans-container ul')
@@ -94,7 +99,7 @@ export default class Translation {
     })
   }
 
-  public static saveWordsTranslation() {
+  public static saveWordsTranslation(): Promise<void> {
     Translation.ensureDictInitiated()
 
     return new Promise((resolve, reject) => {

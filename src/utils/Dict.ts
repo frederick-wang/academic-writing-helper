@@ -39,34 +39,34 @@ export default class Dict {
     return new Map(data.map((v: string): [string, boolean] => [v, true]))
   }
 
-  public static isCET4(word: string) {
+  public static isCET4(word: string): boolean {
     return Dict.cet4.has(word.toLowerCase())
   }
 
-  public static isCET6(word: string) {
+  public static isCET6(word: string): boolean {
     return Dict.cet6.has(word.toLowerCase())
   }
 
-  public static isToefl(word: string) {
+  public static isToefl(word: string): boolean {
     return Dict.toefl.has(word.toLowerCase())
   }
 
-  public static isGRE(word: string) {
+  public static isGRE(word: string): boolean {
     return Dict.gre.has(word.toLowerCase())
   }
-  public static isCET4UniquelyDownward(word: string) {
+  public static isCET4UniquelyDownward(word: string): boolean {
     return Dict.isCET4(word)
   }
 
-  public static isCET6UniquelyDownward(word: string) {
+  public static isCET6UniquelyDownward(word: string): boolean {
     return Dict.isCET6(word) && !Dict.isCET4(word)
   }
 
-  public static isToeflUniquelyDownward(word: string) {
+  public static isToeflUniquelyDownward(word: string): boolean {
     return Dict.isToefl(word) && !Dict.isCET4(word) && !Dict.isCET6(word)
   }
 
-  public static isGREUniquelyDownward(word: string) {
+  public static isGREUniquelyDownward(word: string): boolean {
     return (
       Dict.isGRE(word) &&
       !Dict.isCET4(word) &&
@@ -75,7 +75,7 @@ export default class Dict {
     )
   }
 
-  public static getWordScore(word: string) {
+  public static getWordScore(word: string): 1 | 9 | 25 | 49 | 0 {
     if (Dict.isCET4(word)) {
       return 1
     }
@@ -91,7 +91,7 @@ export default class Dict {
     return 0
   }
 
-  public static getWordBackgroundColor(word: string) {
+  public static getWordBackgroundColor(word: string): string {
     word = word.toLowerCase()
     if (Dict.isCET4(word)) {
       return Dict.wordBackgroundColor.cet4
