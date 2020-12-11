@@ -1,20 +1,20 @@
 <template>
   <el-footer class="footer">
-    <p>English Reading Assistant {{version}}</p>
-    <p>Copyright &copy; {{year}} Frederick Wang</p>
+    <p>English Reading Assistant {{ version }}</p>
+    <p>Copyright &copy; {{ year }} Frederick Wang</p>
   </el-footer>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator'
 
 @Component
 export default class Footer extends Vue {
-  get version() {
-    return process.env.VUE_APP_VERSION;
+  get version(): string {
+    return process.env.VUE_APP_VERSION || ''
   }
-  get year() {
-    return new Date().getFullYear();
+  get year(): number {
+    return new Date().getFullYear()
   }
 }
 </script>

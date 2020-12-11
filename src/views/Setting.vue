@@ -1,19 +1,11 @@
 <template>
-  <el-container class="page page-settings">
+  <el-container class="page page-setting">
     <el-main>
-      <div
-        class="typo"
-        style="padding: 0 20px;"
-      >
+      <div class="typo" style="padding: 0 20px">
         <h3>生词提示</h3>
         <el-row>
           <p class="no-indent">请在下面选择阅读时「生词提示」的显示级别</p>
-          <el-col
-            :xs="24"
-            :sm="12"
-            :lg="8"
-            class="option"
-          >
+          <el-col :xs="24" :sm="12" :lg="8" class="option">
             <span class="pre-switch">四级单词</span>
             <el-switch
               v-model="wordWise.cet4"
@@ -23,12 +15,7 @@
             >
             </el-switch>
           </el-col>
-          <el-col
-            :xs="24"
-            :sm="12"
-            :lg="8"
-            class="option"
-          >
+          <el-col :xs="24" :sm="12" :lg="8" class="option">
             <span class="pre-switch">六级单词</span>
             <el-switch
               v-model="wordWise.cet6"
@@ -38,12 +25,7 @@
             >
             </el-switch>
           </el-col>
-          <el-col
-            :xs="24"
-            :sm="12"
-            :lg="8"
-            class="option"
-          >
+          <el-col :xs="24" :sm="12" :lg="8" class="option">
             <span class="pre-switch">托福单词</span>
             <el-switch
               v-model="wordWise.toefl"
@@ -53,12 +35,7 @@
             >
             </el-switch>
           </el-col>
-          <el-col
-            :xs="24"
-            :sm="12"
-            :lg="8"
-            class="option"
-          >
+          <el-col :xs="24" :sm="12" :lg="8" class="option">
             <span class="pre-switch">GRE 单词</span>
             <el-switch
               v-model="wordWise.gre"
@@ -81,23 +58,23 @@
  * 2019-2-10 23:11:48
  * TODO: 考虑后觉得还是用比较传统的方案，用json保存即可
  */
-import { Component, Vue} from 'vue-property-decorator';
-import Logger from '@/utils/Logger';
+import { WordWise } from '@/store'
+import { Component, Vue } from 'vue-property-decorator'
 
 @Component
-export default class Settings extends Vue {
-  get wordWise() {
-    return this.$store.state.settings.wordWise;
+export default class Setting extends Vue {
+  get wordWise(): WordWise {
+    return this.$store.state.setting.wordWise
   }
 
   private onWordWiseChange() {
-    this.$store.commit('setSettingWordWise', this.wordWise);
+    this.$store.commit('setSettingWordWise', this.wordWise)
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.page-settings {
+.page-setting {
   .option {
     margin-bottom: 20px;
 

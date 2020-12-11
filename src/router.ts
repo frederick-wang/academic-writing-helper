@@ -5,7 +5,7 @@ import Start from './views/Start.vue'
 import AnalyzedResult from './views/start/AnalyzedResult.vue'
 import OriginalArticle from './views/start/OriginalArticle.vue'
 // 设置
-import Settings from './views/Settings.vue'
+import Setting from './views/Setting.vue'
 // 帮助
 import Help from './views/Help.vue'
 // 关于
@@ -21,7 +21,7 @@ export const StartRouter = {
 
 export const Router = {
   START: 'start',
-  SETTINGS: 'settings',
+  SETTING: 'setting',
   HELP: 'help',
   ABOUT: 'about',
   NEWS: 'news',
@@ -60,9 +60,9 @@ export default new VueRouter({
       component: News
     },
     {
-      path: `/${Router.SETTINGS}`,
-      name: Router.SETTINGS,
-      component: Settings
+      path: `/${Router.SETTING}`,
+      name: Router.SETTING,
+      component: Setting
     },
     {
       path: `/${Router.HELP}`,

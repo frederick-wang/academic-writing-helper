@@ -28,7 +28,7 @@
             >GRE词汇</el-tag
           >
         </div>
-        <div class="typo" style="font-weight: bolder;">
+        <div class="typo" style="font-weight: bolder">
           <div
             is="p"
             v-for="(para, paraIndex) in analyzedResult"
@@ -82,11 +82,11 @@
             type="primary"
             size="small"
             @click="exportImportantSentences"
-            style="float: right;"
+            style="float: right"
             >导出为 TXT 格式文本文档</el-button
           >
         </div>
-        <div class="typo" style="font-weight: bolder;">
+        <div class="typo" style="font-weight: bolder">
           <div
             class="sentence-item"
             v-for="(sentenceItem, sentenceIndex) in importantSentences"
@@ -224,8 +224,8 @@ export default class AnalyzedResult extends Vue {
   private tabName = 'article'
   private importantWordsOfSentences: WordItem[][] = []
 
-  get settings() {
-    return this.$store.state.settings
+  get setting() {
+    return this.$store.state.setting
   }
 
   get version() {
@@ -344,7 +344,7 @@ export default class AnalyzedResult extends Vue {
     this.importantWordsOfSentences = Array.from({
       length: this.importantSentences.length
     }).map(() => [])
-    const { cet4, cet6, toefl, gre } = this.settings.wordWise
+    const { cet4, cet6, toefl, gre } = this.setting.wordWise
     setTimeout(() => {
       mapLimit(
         this.importantSentences.map(({ sentence }, index) => ({

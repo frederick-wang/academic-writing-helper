@@ -44,10 +44,6 @@
  */
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { StartRouter } from '@/router'
-import Logger from '@/utils/Logger'
-import Dict from '@/utils/Dict'
-import Punctuation from '@/utils/Punctuation'
-import { NavigationGuard, Route } from 'vue-router/types/router'
 
 @Component({
   beforeRouteEnter(to, from, next) {
@@ -80,13 +76,16 @@ export default class OriginalArticle extends Vue {
   /**
    * After the file contents have been read successfully, clear the list of files.
    */
-  private onFileUploadSuccess(file: any, fileList: any[]) {
-    setTimeout((this.$refs.uploadDocument as any).clearFiles, 3000)
+  private onFileUploadSuccess() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const uploadDocument: any = this.$refs.uploadDocument
+    setTimeout(uploadDocument.clearFiles, 3000)
   }
 
   /**
    * Overrides the default upload behavior and reads the contents of the file directly locally.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private mockHttpRequest({ file }: { file: any }) {
     return new Promise((resolve, reject) => {
       if (file.type === 'text/plain') {

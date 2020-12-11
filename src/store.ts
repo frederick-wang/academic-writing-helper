@@ -3,10 +3,27 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+export interface State {
+  originalText: string
+  setting: Setting
+  key: number
+}
+
+export interface WordWise {
+  cet4: boolean
+  cet6: boolean
+  toefl: boolean
+  gre: boolean
+}
+
+export interface Setting {
+  wordWise: WordWise
+}
+
+export default new Vuex.Store<State>({
   state: {
     originalText: '',
-    settings: {
+    setting: {
       wordWise: {
         cet4: false,
         cet6: true,
@@ -21,7 +38,7 @@ export default new Vuex.Store({
       state.originalText = payload
     },
     setSettingWordWise(state, payload) {
-      state.settings.wordWise = payload
+      state.setting.wordWise = payload
     }
   },
   actions: {}

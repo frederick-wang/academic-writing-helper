@@ -8,7 +8,7 @@
     >
       <el-menu-item :index="Router.START">英语阅读助手</el-menu-item>
       <el-menu-item :index="Router.NEWS">新闻聚合</el-menu-item>
-      <el-menu-item :index="Router.SETTINGS">设置</el-menu-item>
+      <el-menu-item :index="Router.SETTING">设置</el-menu-item>
       <el-menu-item :index="Router.HELP">使用帮助</el-menu-item>
       <el-menu-item :index="Router.ABOUT">关于</el-menu-item>
     </el-menu>
@@ -16,23 +16,22 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { Router } from '@/router';
-import Logger from '@/utils/Logger';
+import { Component, Vue } from 'vue-property-decorator'
+import { Router } from '@/router'
 
 @Component
 export default class Nav extends Vue {
-  get router() {
-    const regExpResult = this.$route.path.match(/^\/(\S+?)(?:\/|$)/);
-    return regExpResult ? regExpResult[1] : Router.START;
+  get router(): string {
+    const regExpResult = this.$route.path.match(/^\/(\S+?)(?:\/|$)/)
+    return regExpResult ? regExpResult[1] : Router.START
   }
 
-  get Router() {
-    return Router;
+  get Router(): typeof Router {
+    return Router
   }
 
   private navMenuSelectHandler(key: string) {
-    this.$router.replace(`/${key}`);
+    this.$router.replace(`/${key}`)
   }
 }
 </script>

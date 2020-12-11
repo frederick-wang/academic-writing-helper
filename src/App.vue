@@ -1,9 +1,6 @@
 <template>
   <div id="app">
-    <el-container
-      id="main"
-      direction="vertical"
-    >
+    <el-container id="main" direction="vertical">
       <Nav />
       <router-view />
       <Footer />
@@ -43,10 +40,10 @@
  * 可以做成小程序参加微信小程序开发者大赛，可以参考扇贝，还做成网页版+APP。而且还有一个已有的桌面版。
  */
 
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator'
 
-import Nav from '@/components/Nav.vue';
-import Footer from '@/components/Footer.vue';
+import Nav from '@/components/Nav.vue'
+import Footer from '@/components/Footer.vue'
 
 @Component({
   components: {
@@ -56,11 +53,11 @@ import Footer from '@/components/Footer.vue';
 })
 export default class App extends Vue {
   private mounted() {
-    const $main = document.getElementById('main');
-    const $spinner = document.getElementById('spinner');
+    const $main = document.getElementById('main')
+    const $spinner = document.getElementById('spinner')
     if ($main && $spinner) {
-      $main.style.display = 'flex';
-      $spinner.style.display = 'none';
+      $main.style.display = 'flex'
+      $spinner.style.display = 'none'
     }
   }
 }

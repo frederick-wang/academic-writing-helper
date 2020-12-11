@@ -8,8 +8,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import Aside from '@/components/start/Aside.vue';
+import { Component, Vue } from 'vue-property-decorator'
+import Aside from '@/components/start/Aside.vue'
 
 @Component({
   components: {
