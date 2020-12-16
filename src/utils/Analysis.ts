@@ -37,7 +37,6 @@ export default class Analysis {
     const sentenceWords = convertedSentence.filter((v) => !Text.isSeparator(v))
 
     /**
-     * 2019-1-8 04:35:48
      * NOTE: Maybe I need to consider to reuse the old algorithm to evaluate scores, but it's unnecessary.
      */
 

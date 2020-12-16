@@ -52,12 +52,6 @@
 </template>
 
 <script lang="ts">
-/**
- * 2019-2-6 23:20:14
- * TODO: 设置需要能保存，不能每次打开重新设置
- * 2019-2-10 23:11:48
- * TODO: 考虑后觉得还是用比较传统的方案，用json保存即可
- */
 import { WordWise } from '@/store'
 import { Component, Vue } from 'vue-property-decorator'
 
