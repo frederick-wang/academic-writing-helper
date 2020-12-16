@@ -3,7 +3,7 @@
     <el-main>
       <div class="typo" style="padding: 0 20px">
         <h3>关于我们</h3>
-        <p>开发团队： 王兆基 张楠 张之栋 王茂旭 唐一弓</p>
+        <p>开发团队： 王兆基 张楠 龙雁翎 王秋雨</p>
         <p>负责人： 王兆基，男，九十年代生人，可能是一个程序员。</p>
         <p>个人博客：<a href="https://zhaoji.wang">https://zhaoji.wang</a></p>
         <p>

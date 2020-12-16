@@ -7,5 +7,6 @@ declare module 'vue/types/vue' {
   // 3. Declare augmentation for Vue
   interface Vue {
     $message: any
+    $loading: any
   }
 }

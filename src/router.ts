@@ -4,19 +4,20 @@ import VueRouter from 'vue-router'
 import Start from './views/Start.vue'
 import AnalyzedResult from './views/start/AnalyzedResult.vue'
 import OriginalArticle from './views/start/OriginalArticle.vue'
+import News from './views/start/News.vue'
 // 设置
 import Setting from './views/Setting.vue'
 // 帮助
 import Help from './views/Help.vue'
 // 关于
 import About from './views/About.vue'
-import News from './views/News.vue'
 
 Vue.use(VueRouter)
 
 export const StartRouter = {
   ORIGINAL_ARTICLE: `original_article`,
-  ANALYZED_RESULT: `analyzed_result`
+  ANALYZED_RESULT: `analyzed_result`,
+  NEWS: 'news'
 }
 
 export const Router = {
@@ -24,7 +25,6 @@ export const Router = {
   SETTING: 'setting',
   HELP: 'help',
   ABOUT: 'about',
-  NEWS: 'news',
   start: StartRouter
 }
 
@@ -48,16 +48,16 @@ export default new VueRouter({
           component: OriginalArticle
         },
         {
+          path: StartRouter.NEWS,
+          name: StartRouter.NEWS,
+          component: News
+        },
+        {
           path: StartRouter.ANALYZED_RESULT,
           name: StartRouter.ANALYZED_RESULT,
           component: AnalyzedResult
         }
       ]
-    },
-    {
-      path: `/${Router.NEWS}`,
-      name: Router.NEWS,
-      component: News
     },
     {
       path: `/${Router.SETTING}`,

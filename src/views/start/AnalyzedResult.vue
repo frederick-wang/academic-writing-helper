@@ -211,256 +211,78 @@
  */
 import { ipcRenderer as ipc } from 'electron'
 import { Component, Vue } from 'vue-property-decorator'
-import Dict from '@/utils/Dict'
-import Logger from '@/utils/Logger'
-import Translation from '@/utils/Translation'
-import Punctuation from '@/utils/Punctuation'
-import Text from '@/utils/Text'
-import { SentenceItem, WordItem, SentenceItemWithRelevance } from '@/interface'
-import { mapLimit } from 'async'
+import Analysis from '@/utils/Analysis'
+// import Dict from '@/utils/Dict'
+// import Logger from '@/utils/Logger'
+// import Translation from '@/utils/Translation'
+// import Punctuation from '@/utils/Punctuation'
+// import Text from '@/utils/Text'
+import { SentenceItem, WordItem } from '@/interface'
+import { Setting } from '@/store'
+// import { mapLimit } from 'async'
 
 @Component
 export default class AnalyzedResult extends Vue {
   private tabName = 'article'
   private importantWordsOfSentences: WordItem[][] = []
 
-  get setting() {
+  get setting(): Setting {
     return this.$store.state.setting
   }
-
-  get version() {
-    return process.env.VUE_APP_VERSION
+  get wordBorderColor(): {
+    cet4: string
+    cet6: string
+    toefl: string
+    gre: string
+  } {
+    return Analysis.wordBorderColor()
   }
-
+  get wordBackgroundColor(): {
+    none: string
+    cet4: string
+    cet6: string
+    toefl: string
+    gre: string
+  } {
+    return Analysis.wordBackgroundColor()
+  }
+  get analyzedResult(): SentenceItem[][] {
+    return Analysis.analyzedResult(this.originalText)
+  }
+  get importanceStandard(): number {
+    return Analysis.importanceStandard(this.analyzedResult)
+  }
+  get importantSentences(): SentenceItem[] {
+    return Analysis.importantSentences(this.analyzedResult)
+  }
+  get allWords(): string[] {
+    return Analysis.allWords(this.analyzedResult)
+  }
+  get greWords(): string[] {
+    return Analysis.greWords(this.allWords)
+  }
+  get toeflWords(): string[] {
+    return Analysis.toeflWords(this.allWords)
+  }
+  get cet6Words(): string[] {
+    return Analysis.cet6Words(this.allWords)
+  }
+  get cet4Words(): string[] {
+    return Analysis.cet4Words(this.allWords)
+  }
   get originalText(): string {
     return this.$store.state.originalText
   }
-
-  get wordBorderColor() {
-    return Dict.wordBorderColor
-  }
-
-  get wordBackgroundColor() {
-    return Dict.wordBackgroundColor
-  }
-
-  get importanceStandard(): number {
-    /**
-     * Temporarily store the scores of all sentences， in order from largest to smallest.
-     */
-    const allScores = this.analyzedResult
-      .reduce(
-        (accPara, curPara) => [
-          ...accPara,
-          ...curPara.reduce((acc, cur) => [...acc, cur.score], [] as number[])
-        ],
-        [] as number[]
-      )
-      .sort((a, b) => b - a)
-    // Take the score of 20% as the standard of important sentences.
-    // If there is no sentence at present, return 0.
-    return allScores[Math.floor(allScores.length * 0.2)] || 0
-  }
-
-  get analyzedResult(): SentenceItem[][] {
-    Logger.time('analyzedResult')
-    if (!this.originalText) {
-      Logger.timeEnd('analyzedResult')
-      return []
-    }
-
-    const splitParagraph = (str: string) => Text.split(str, '\n')
-
-    const splitSentence = (str: string) => Text.split(str, Text.separatorRegExp)
-
-    /**
-     * Text preprocessing.
-     * @param text Text that needs to be preprocessed
-     * @returns Processed text separated by paragraph, as a string[].
-     */
-    const preProcessText = (text: string) =>
-      splitParagraph(Text.tidyCRLF(Punctuation.normalizeText(text)))
-
-    const paragraphs = preProcessText(this.originalText)
-
-    const splitParagraphToSentences = (text: string) =>
-      (text.match(Punctuation.sentencePunctuationRegExpG) || [])
-        .map((v) => v.trim())
-        .map((sentence) => {
-          const convertedSentence = splitSentence(sentence)
-          const score = this.getSentenceScore(convertedSentence)
-          return {
-            score,
-            sentence: convertedSentence
-          }
-        })
-    const result = paragraphs.map(splitParagraphToSentences)
-    Logger.timeEnd('analyzedResult')
-    return result
-  }
-
-  get greWords(): string[] {
-    return this.allWords.filter((v) => Dict.isGRE(v))
-  }
-  get toeflWords(): string[] {
-    return this.allWords.filter((v) => Dict.isToefl(v))
-  }
-  get cet6Words(): string[] {
-    return this.allWords.filter((v) => Dict.isCET6(v))
-  }
-  get cet4Words(): string[] {
-    return this.allWords.filter((v) => Dict.isCET4(v))
-  }
-  get allWords(): string[] {
-    return [
-      ...new Set(
-        this.analyzedResult.reduce(
-          (accPara, curPara) => [
-            ...accPara,
-            ...curPara.reduce(
-              (accS, curS) => [
-                ...accS,
-                ...curS.sentence.reduce(
-                  (acc, cur) =>
-                    Punctuation.is(cur) || accPara.includes(cur)
-                      ? acc
-                      : [...acc, cur],
-                  [] as string[]
-                )
-              ],
-              [] as string[]
-            )
-          ],
-          [] as string[]
-        )
-      )
-    ]
-  }
-
-  /**
-   * Get translations of important words.
-   */
-  private getImportantSentenceTranslations() {
-    this.importantWordsOfSentences = Array.from({
-      length: this.importantSentences.length
-    }).map(() => [])
-    const { cet4, cet6, toefl, gre } = this.setting.wordWise
-    setTimeout(() => {
-      mapLimit(
-        this.importantSentences.map(({ sentence }, index) => ({
-          words: [...new Set(sentence)].filter(
-            (word) =>
-              (cet4 && Dict.isCET4UniquelyDownward(word)) ||
-              (cet6 && Dict.isCET6UniquelyDownward(word)) ||
-              (toefl && Dict.isToeflUniquelyDownward(word)) ||
-              (gre && Dict.isGREUniquelyDownward(word))
-          ),
-          index
-        })),
-        5,
-        ({ words, index }, callback) => {
-          Translation.getWordCollectionTranslation(words, 10)
-            .then((data) => {
-              this.importantWordsOfSentences[index].splice(0, 0, ...data)
-              callback(null, data)
-            })
-            .catch((err) => callback(err))
-        },
-        (err) => {
-          if (err) {
-            Logger.error(err)
-            return
-          }
-          Translation.saveWordsTranslation()
-        }
-      )
-    }, 1000)
-  }
-
-  /**
-   * Get all sentences whose score is above the standard.
-   */
-  get importantSentences(): SentenceItem[] {
-    return this.analyzedResult.reduce(
-      (accPara, curPara) => [
-        ...accPara,
-        ...curPara.reduce(
-          (acc, cur, i, src) =>
-            cur.score >= this.importanceStandard
-              ? [
-                  ...acc,
-                  {
-                    ...cur,
-                    revlevance: {
-                      before: [src[i - 2], src[i - 1]]
-                        .filter((v) => v)
-                        .map((v) => v.sentence)
-                        // 只保留一句前文
-                        .slice(0, 1)
-                        .flat(),
-                      after: [src[i + 1], src[i + 2]]
-                        .filter((v) => v)
-                        .map((v) => v.sentence)
-                        // 只保留一句后文
-                        .slice(0, 1)
-                        .flat()
-                    }
-                  }
-                ]
-              : acc,
-          [] as SentenceItemWithRelevance[]
-        )
-      ],
-      []
-    )
-  }
-
-  private getSentenceScore(convertedSentence: string[]) {
-    const sentenceWords = convertedSentence.filter((v) => !Text.isSeparator(v))
-
-    /**
-     * 2019-1-8 04:35:48
-     * NOTE: Maybe I need to consider to reuse the old algorithm to evaluate scores, but it's unnecessary.
-     */
-
-    // The old algorithm: f(x) = ln(x)^2 / x.
-    // const f = (v: number) => Math.log(v) ** 2 / v;
-    // const getLengthScore = f;
-
-    // The current algorithm: normal distribution, which μ equals 20 and σ equals 6.25.
-    const normpdf = (v: number, mu: number, sigma: number) =>
-      (1 / (sigma * Math.sqrt(2 * Math.PI))) *
-      Math.E ** -((v - mu) ** 2 / (2 * sigma ** 2))
-    const getLengthScore = (v: number) => normpdf(v, 20, 6.25)
-
-    const getWordsScore = (words: string[]) =>
-      words
-        .map((word) => word.toLowerCase())
-        .reduce((acc, cur) => acc + Dict.getWordScore(cur), 0)
-
-    const getTotalScore = (words: string[]) => (length: number) =>
-      getWordsScore(words) * getLengthScore(length)
-
-    return getTotalScore(sentenceWords)(sentenceWords.length)
-  }
   private getWordStyle(word: string) {
-    if (Text.isSeparator(word)) {
-      return {
-        padding: '0'
-      }
-    }
-    const getStyle = (w: string) => ({
-      backgroundColor: Dict.getWordBackgroundColor(w)
-    })
-    return getStyle(word)
+    return Analysis.getWordStyle(word)
   }
   private exportImportantSentences() {
     const header =
-      `本文件由【English Reading Assistant ${
-        this.version
-      }】于 ${new Date().toLocaleString()} 导出\r\n` +
+      `本文件由【English Reading Assistant ${Analysis.version()}】于 ${new Date().toLocaleString()} 导出\r\n` +
       `Copyright (C) ${new Date().getFullYear()} Frederick Wang\r\n` +
       '----------------------------------------\r\n\r\n'
+    console.log('nmsl')
+    console.log(this.importantWordsOfSentences)
     const convertSentenceWords = (item: WordItem[]) =>
       item.reduce(
         (acc, cur, i, arr) =>
@@ -499,9 +321,12 @@ export default class AnalyzedResult extends Vue {
     )
     ipc.send('save-dialog-txt', data)
   }
-
   private created() {
-    this.getImportantSentenceTranslations()
+    Analysis.getImportantSentenceTranslations(
+      this.importantWordsOfSentences,
+      this.setting.wordWise,
+      this.importantSentences
+    )
   }
 }
 </script>

@@ -7,7 +7,6 @@
       @select="navMenuSelectHandler"
     >
       <el-menu-item :index="Router.START">英语阅读助手</el-menu-item>
-      <el-menu-item :index="Router.NEWS">新闻聚合</el-menu-item>
       <el-menu-item :index="Router.SETTING">设置</el-menu-item>
       <el-menu-item :index="Router.HELP">使用帮助</el-menu-item>
       <el-menu-item :index="Router.ABOUT">关于</el-menu-item>

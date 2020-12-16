@@ -70,8 +70,8 @@ export default class Translation {
       } else {
         const url = `http://www.youdao.com/w/eng/${word}`
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ipc.once(`request-result-${url}`, (event: any, res: any) => {
-          const $ = cheerio.load(res.body)
+        ipc.once(`request-result-${url}`, (event: any, body: string) => {
+          const $ = cheerio.load(body)
           const translation = $('#phrsListTab .trans-container ul')
             .text()
             .split('\n')

@@ -1,8 +1,5 @@
 <template>
-  <el-aside
-    width="200px"
-    class="aside"
-  >
+  <el-aside width="200px" class="aside">
     <el-menu
       :default-active="router"
       class="aside-menu"
@@ -11,6 +8,10 @@
       <el-menu-item :index="StartRouter.ORIGINAL_ARTICLE">
         <i class="el-icon-document"></i>
         <span slot="title">原始文章</span>
+      </el-menu-item>
+      <el-menu-item :index="StartRouter.NEWS">
+        <i class="el-icon-document"></i>
+        <span slot="title">新闻聚合</span>
       </el-menu-item>
       <el-menu-item :index="StartRouter.ANALYZED_RESULT">
         <i class="el-icon-menu"></i>
@@ -21,25 +22,24 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { Router, StartRouter } from '@/router';
-import Logger from '@/utils/Logger';
+import { Component, Vue } from 'vue-property-decorator'
+import { Router, StartRouter } from '@/router'
 
 @Component
 export default class Aside extends Vue {
-  get router() {
+  get router(): string {
     const regExpResult = this.$route.path.match(
       new RegExp(`^/${Router.START}/(\\S+?)(?:/|$)`)
-    );
-    return regExpResult ? regExpResult[1] : StartRouter.ORIGINAL_ARTICLE;
+    )
+    return regExpResult ? regExpResult[1] : StartRouter.ORIGINAL_ARTICLE
   }
 
-  get StartRouter() {
-    return StartRouter;
+  get StartRouter(): typeof StartRouter {
+    return StartRouter
   }
 
   private asideMenuSelectHandler(key: string) {
-    this.$router.replace(`${key}`);
+    this.$router.replace(`${key}`)
   }
 }
 </script>
