@@ -21,7 +21,7 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
-    "async": "^3.2.0",
+    "async": "^3.2.2",
     "cheerio": "^1.0.0-rc.2",
     "core-js": "^3.8.1",
     "element-ui": "^2.14.1",
